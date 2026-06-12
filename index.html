@@ -238,11 +238,7 @@ body.ltr .metric::before{right:auto;left:0;border-radius:var(--radius) 0 0 var(-
   <div style="text-align:center;color:#aaa;font-size:12px" id="headerDate"></div>
 </div>
 
-<div class="api-row">
-  <label>🔑 Anthropic API Key:</label>
-  <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." oninput="saveKey(this.value)">
-  <span id="ks" style="font-size:11px;color:var(--muted)">—</span>
-</div>
+<input type="hidden" id="apiKeyInput" value="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">
 
 <div class="mode-switch">
   <button class="mode-btn active-family" id="modeFamily" onclick="setMode('family')">🏠 <span data-fa="خانواده" data-en="Family">خانواده</span></button>
@@ -549,8 +545,8 @@ function setMode(m){mode=m;document.getElementById('modeFamily').className='mode
 function sw(n){const ts=['scan','list','dash','export'];document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',ts[i]===n));document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));document.getElementById(n).classList.add('active');if(n==='list')renderList();if(n==='dash')renderDash();}
 
 // API KEY
-function getKey(){return document.getElementById('apiKeyInput')?.value.trim()||localStorage.getItem('acc_api_key')||'';}
-function saveKey(v){if(v.trim()){localStorage.setItem('acc_api_key',v.trim());document.getElementById('ks').textContent='✅';}else{localStorage.removeItem('acc_api_key');document.getElementById('ks').textContent='—';}}
+function getKey(){return document.getElementById('apiKeyInput')?.value||'';}
+function saveKey(v){}
 
 // CUR/TYPE TOGGLES
 function setCfCur(c){cfCur=c;document.getElementById('cfCurCAD').className='cur-btn'+(c==='CAD'?' active-cad':'');document.getElementById('cfCurIRR').className='cur-btn'+(c==='IRR'?' active-irr':'');}
@@ -661,7 +657,6 @@ function exportBiz(){const wb=XLSX.utils.book_new();const data=txs.filter(t=>t.m
 // INIT
 function initApp(){
   const sr=localStorage.getItem('acc_cad_rate');if(sr)cadRate=parseFloat(sr);
-  const sk=localStorage.getItem('acc_api_key');if(sk){document.getElementById('apiKeyInput').value=sk;document.getElementById('ks').textContent='✅';}
   document.getElementById('mDate').valueAsDate=new Date();
   document.getElementById('cfDate').valueAsDate=new Date();
   document.getElementById('cfDateJalali').textContent=gregToJalaliStr(today());
