@@ -238,7 +238,7 @@ body.ltr .metric::before{right:auto;left:0;border-radius:var(--radius) 0 0 var(-
   <div style="text-align:center;color:#aaa;font-size:12px" id="headerDate"></div>
 </div>
 
-<input type="hidden" id="apiKeyInput" value="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">
+<input type="hidden" id="apiKeyInput" value="">
 
 <div class="mode-switch">
   <button class="mode-btn active-family" id="modeFamily" onclick="setMode('family')">🏠 <span data-fa="خانواده" data-en="Family">خانواده</span></button>
@@ -457,7 +457,7 @@ async function doSignup(){
   else{const el=document.getElementById('authErr');el.style.color='var(--green)';el.textContent='✅ ایمیل تأیید فرستاده شد | Check your email';}
 }
 async function doGoogle(){await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.href}});}
-async function doLogout(){await sb.auth.signOut();txs=[];currentUser=null;document.getElementById('mainApp').style.display='none';document.getElementById('authScreen').classList.remove('hidden');}
+async function doLogout(){await sb.auth.signOut();window.location.reload();}
 
 sb.auth.onAuthStateChange(async(event,session)=>{
   if(session?.user){
