@@ -255,55 +255,122 @@ body.ltr .metric::before{right:auto;left:0;border-radius:var(--radius) 0 0 var(-
 <!-- SCAN -->
 <div id="scan" class="sec active">
   <div class="card">
-    <div class="card-title">📷 <span data-fa="اسکن فاکتور با AI" data-en="AI Receipt Scanner">اسکن فاکتور با AI</span></div>
-    <div class="scan-zone">
-      <input type="file" id="fileInput" accept="image/*" onchange="onFile(event)">
-      <div style="font-size:42px">📸</div>
-      <p style="font-size:14px;color:var(--muted);margin-top:8px" data-fa="عکس فاکتور رو اینجا بذار" data-en="Drop receipt photo here">عکس فاکتور رو اینجا بذار</p>
-      <p class="hint" data-fa="از گوشی هم میشه مستقیم عکس گرفت" data-en="Works with camera on mobile">از گوشی هم میشه مستقیم عکس گرفت</p>
+    <div class="card-title">➕ <span data-fa="ثبت تراکنش جدید" data-en="New Transaction">ثبت تراکنش جدید</span></div>
+
+    <!-- STEP 1: نوع تراکنش -->
+    <div id="step1">
+      <p style="font-size:14px;color:var(--muted);margin-bottom:12px" data-fa="اول نوع تراکنش رو انتخاب کن:" data-en="First, select transaction type:">اول نوع تراکنش رو انتخاب کن:</p>
+      <div class="type-btns">
+        <button class="type-btn" id="cfBtnInc" onclick="selectType('income')" style="padding:18px;font-size:16px">💰 <span data-fa="درآمد" data-en="Income">درآمد</span></button>
+        <button class="type-btn" id="cfBtnExp" onclick="selectType('expense')" style="padding:18px;font-size:16px">🛒 <span data-fa="هزینه" data-en="Expense">هزینه</span></button>
+      </div>
     </div>
-    <img id="prevImg" class="preview-img" alt="">
-    <div class="ai-box" id="aiBox">
-      <span class="spinner" id="spin"></span>
-      <span style="font-size:13px;color:var(--muted);margin-right:6px" id="aiStatus">AI داره فاکتور رو می‌خونه...</span>
+
+    <!-- STEP 2: روش ورود -->
+    <div id="step2" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+        <span id="selectedTypeLabel" style="font-size:14px;font-weight:bold"></span>
+        <button onclick="backToStep1()" style="font-size:12px;background:none;border:1px solid var(--border);border-radius:8px;padding:4px 10px;cursor:pointer;color:var(--muted)">← تغییر</button>
+      </div>
+      <p style="font-size:14px;color:var(--muted);margin-bottom:12px" data-fa="چطور وارد کنی؟" data-en="How to enter?">چطور وارد کنی؟</p>
+      <div class="type-btns">
+        <button class="type-btn" onclick="showScan()" style="padding:16px">📷 <span data-fa="اسکن فاکتور" data-en="Scan Receipt">اسکن فاکتور</span></button>
+        <button class="type-btn" onclick="showManualInline()" style="padding:16px">✏️ <span data-fa="ثبت دستی" data-en="Manual Entry">ثبت دستی</span></button>
+      </div>
     </div>
-    <div class="confirm-box" id="confirmBox">
-      <div style="font-size:14px;font-weight:bold;margin-bottom:12px;color:#7B5800" data-fa="✅ اطلاعات استخراج‌شده — تأیید کن" data-en="✅ Extracted Info — Please Confirm">✅ اطلاعات استخراج‌شده — تأیید کن</div>
+
+    <!-- SCAN SECTION -->
+    <div id="scanSection" style="display:none;margin-top:14px">
+      <div class="scan-zone">
+        <input type="file" id="fileInput" accept="image/*" onchange="onFile(event)">
+        <div style="font-size:42px">📸</div>
+        <p style="font-size:14px;color:var(--muted);margin-top:8px" data-fa="عکس فاکتور رو اینجا بذار" data-en="Drop receipt photo here">عکس فاکتور رو اینجا بذار</p>
+        <p class="hint" data-fa="از گوشی هم میشه مستقیم عکس گرفت" data-en="Works with camera on mobile">از گوشی هم میشه مستقیم عکس گرفت</p>
+      </div>
+      <img id="prevImg" class="preview-img" alt="">
+      <div class="ai-box" id="aiBox">
+        <span class="spinner" id="spin"></span>
+        <span style="font-size:13px;color:var(--muted);margin-right:6px" id="aiStatus">AI داره فاکتور رو می‌خونه...</span>
+      </div>
+      <div class="confirm-box" id="confirmBox">
+        <div style="font-size:14px;font-weight:bold;margin-bottom:12px;color:#7B5800" data-fa="✅ اطلاعات استخراج‌شده — تأیید کن" data-en="✅ Extracted Info — Please Confirm">✅ اطلاعات استخراج‌شده — تأیید کن</div>
+        <div class="row2">
+          <div>
+            <label data-fa="مبلغ" data-en="Amount">مبلغ</label>
+            <input type="number" id="cfAmount" placeholder="0">
+            <div class="cur-toggle">
+              <button class="cur-btn active-cad" id="cfCurCAD" onclick="setCfCur('CAD')">🍁 CAD</button>
+              <button class="cur-btn" id="cfCurIRR" onclick="setCfCur('IRR')">🇮🇷 تومان</button>
+            </div>
+          </div>
+          <div>
+            <label data-fa="توضیح" data-en="Description">توضیح</label>
+            <input type="text" id="cfDesc">
+          </div>
+        </div>
+        <div class="row2">
+          <div>
+            <label data-fa="تاریخ" data-en="Date">تاریخ</label>
+            <input type="date" id="cfDate">
+            <div class="date-dual" id="cfDateJalali" style="margin-top:4px"></div>
+          </div>
+          <div>
+            <label data-fa="دسته‌بندی" data-en="Category">دسته‌بندی</label>
+            <select id="cfCat"></select>
+          </div>
+        </div>
+        <div class="flex-end" style="margin-top:14px">
+          <button class="btn" onclick="cancelScan()">لغو</button>
+          <button class="btn btn-main" onclick="confirmTx()">✓ ثبت کن</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MANUAL INLINE SECTION -->
+    <div id="manualSection" style="display:none;margin-top:14px">
       <div class="row2">
         <div>
           <label data-fa="مبلغ" data-en="Amount">مبلغ</label>
-          <input type="number" id="cfAmount" placeholder="0">
-          <div class="cur-toggle">
-            <button class="cur-btn active-cad" id="cfCurCAD" onclick="setCfCur('CAD')">🍁 CAD</button>
-            <button class="cur-btn" id="cfCurIRR" onclick="setCfCur('IRR')">🇮🇷 تومان</button>
+          <input type="number" id="mAmount" placeholder="0">
+          <div class="cur-toggle" style="margin-top:6px">
+            <button class="cur-btn active-cad" id="mCurCAD" onclick="setManualCur('CAD')">🍁 CAD</button>
+            <button class="cur-btn" id="mCurIRR" onclick="setManualCur('IRR')">🇮🇷 تومان</button>
           </div>
         </div>
         <div>
-          <label data-fa="توضیح" data-en="Description">توضیح</label>
-          <input type="text" id="cfDesc">
+          <label data-fa="تاریخ" data-en="Date">تاریخ</label>
+          <input type="date" id="mDate" onchange="updateMDateJalali()">
+          <div class="date-dual" id="mDateJalali" style="margin-top:4px"></div>
         </div>
       </div>
-      <div class="row2">
-        <div>
-          <label data-fa="تاریخ میلادی" data-en="Date">تاریخ</label>
-          <input type="date" id="cfDate">
-          <div class="date-dual" id="cfDateJalali" style="margin-top:4px"></div>
-        </div>
-        <div>
-          <label data-fa="دسته‌بندی" data-en="Category">دسته‌بندی</label>
-          <select id="cfCat"></select>
-        </div>
+      <div>
+        <label data-fa="دسته‌بندی" data-en="Category">دسته‌بندی</label>
+        <select id="mCat"></select>
       </div>
-      <div style="margin-top:12px">
-        <label data-fa="نوع تراکنش" data-en="Type">نوع تراکنش</label>
-        <div class="type-btns">
-          <button class="type-btn" id="cfBtnInc" onclick="setCfType('income')">💰 <span data-fa="درآمد" data-en="Income">درآمد</span></button>
-          <button class="type-btn" id="cfBtnExp" onclick="setCfType('expense')">🛒 <span data-fa="هزینه" data-en="Expense">هزینه</span></button>
+      <div>
+        <label data-fa="توضیح" data-en="Description">توضیح</label>
+        <input type="text" id="mDesc">
+      </div>
+      <div id="bizFields" style="display:none">
+        <div class="row2" style="margin-top:10px">
+          <div><label>شماره فاکتور | Invoice #</label><input type="text" id="mInvNum" placeholder="INV-001"></div>
+          <div><label>طرف حساب | Party</label><input type="text" id="mParty"></div>
+        </div>
+        <div style="margin-top:8px">
+          <label>نوع مالیاتی | Tax Type</label>
+          <select id="mTaxType">
+            <option value="Sales/Revenue">Sales / فروش</option>
+            <option value="Purchase">Purchase / خرید</option>
+            <option value="General Expense">General Expense</option>
+            <option value="Payroll">Payroll / حقوق</option>
+            <option value="Rent">Rent / اجاره</option>
+            <option value="GST/HST">GST/HST</option>
+          </select>
         </div>
       </div>
       <div class="flex-end" style="margin-top:14px">
-        <button class="btn" onclick="cancelScan()">لغو</button>
-        <button class="btn btn-main" onclick="confirmTx()">✓ ثبت کن</button>
+        <button class="btn" onclick="backToStep2()">لغو</button>
+        <button class="btn btn-main" onclick="addManual()">✓ ثبت</button>
       </div>
     </div>
   </div>
@@ -552,6 +619,44 @@ function saveKey(v){}
 function setCfCur(c){cfCur=c;document.getElementById('cfCurCAD').className='cur-btn'+(c==='CAD'?' active-cad':'');document.getElementById('cfCurIRR').className='cur-btn'+(c==='IRR'?' active-irr':'');}
 function setManualCur(c){mCur=c;document.getElementById('mCurCAD').className='cur-btn'+(c==='CAD'?' active-cad':'');document.getElementById('mCurIRR').className='cur-btn'+(c==='IRR'?' active-irr':'');}
 function setCfType(t){cfType=t;document.getElementById('cfBtnInc').className='type-btn'+(t==='income'?' sel-income':'');document.getElementById('cfBtnExp').className='type-btn'+(t==='expense'?' sel-expense':'');}
+
+function selectType(t){
+  cfType=t;mType=t;
+  setCfType(t);
+  document.getElementById('step1').style.display='none';
+  document.getElementById('step2').style.display='block';
+  const label=document.getElementById('selectedTypeLabel');
+  if(t==='income') label.innerHTML='💰 <span style="color:var(--green)">'+(lang==='fa'?'درآمد':'Income')+'</span>';
+  else label.innerHTML='🛒 <span style="color:var(--red)">'+(lang==='fa'?'هزینه':'Expense')+'</span>';
+}
+
+function backToStep1(){
+  cfType=null;mType=null;
+  document.getElementById('step1').style.display='block';
+  document.getElementById('step2').style.display='none';
+  document.getElementById('scanSection').style.display='none';
+  document.getElementById('manualSection').style.display='none';
+  document.getElementById('cfBtnInc').className='type-btn';
+  document.getElementById('cfBtnExp').className='type-btn';
+}
+
+function backToStep2(){
+  document.getElementById('manualSection').style.display='none';
+  document.getElementById('step2').style.display='block';
+}
+
+function showScan(){
+  document.getElementById('step2').style.display='none';
+  document.getElementById('scanSection').style.display='block';
+}
+
+function showManualInline(){
+  document.getElementById('step2').style.display='none';
+  document.getElementById('manualSection').style.display='block';
+  document.getElementById('bizFields').style.display=mode==='biz'?'block':'none';
+  document.getElementById('mDate').valueAsDate=new Date();
+  updateMDateJalali();
+}
 function setManualType(t){mType=t;document.getElementById('mBtnInc').className='type-btn'+(t==='income'?' sel-income':'');document.getElementById('mBtnExp').className='type-btn'+(t==='expense'?' sel-expense':'');}
 
 // SCAN
@@ -567,9 +672,15 @@ async function onFile(e){
     document.getElementById('confirmBox').style.display='none';
     try{
       const res=await fetch('https://delicate-fire-f495.behnazbamozesh.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mime,data:b64}},{type:'text',text:'Receipt image. Reply ONLY with raw JSON, no markdown, no extra text: {"amount":number,"currency":"CAD_or_IRR","desc":"short English description","date":"YYYY-MM-DD or null","party":"store name or null"}. If CAD/USD use CAD. If Toman/Rial use IRR. If rial divide by 10 for toman.'}]}]})});
-      const d=await res.json();const txt=d.content.map(b=>b.text||'').join('');
+      const d=await res.json();
+      console.log('Worker response:', JSON.stringify(d));
+      const txt=d.content?d.content.map(b=>b.text||'').join(''):'';
+      console.log('Text:', txt);
       document.getElementById('spin').style.display='none';
-      const parsed=JSON.parse(txt.replace(/```json|```/g,'').trim());
+      const clean=txt.replace(/```json|```/g,'').trim();
+      const jsonMatch=clean.match(/\{[\s\S]*\}/);
+      console.log('JSON match:', jsonMatch);
+      const parsed=JSON.parse(jsonMatch?jsonMatch[0]:clean);
       document.getElementById('aiStatus').textContent=lang==='fa'?'✅ فاکتور خونده شد':'✅ Done';
       document.getElementById('cfAmount').value=parsed.amount||'';
       document.getElementById('cfDesc').value=parsed.desc||'';
@@ -588,10 +699,10 @@ async function confirmTx(){
   const tx={mode,type:cfType,amount:amt,cur:cfCur,amtCAD:toCAD(amt,cfCur),amtToman:toToman(amt,cfCur),desc:document.getElementById('cfDesc').value||(lang==='fa'?'فاکتور اسکن‌شده':'Scanned receipt'),cat:document.getElementById('cfCat').value,date:dateVal,jalali:gregToJalaliStr(dateVal),party:'',invNum:'',taxType:'',scanned:true};
   const saved=await saveToCloud(tx);
   if(saved){tx.id=saved.id;txs.unshift(tx);renderList();renderDash();}
-  cancelScan();alert(lang==='fa'?'✅ ثبت شد':'✅ Saved');
+  cancelScan();backToStep1();alert(lang==='fa'?'✅ ثبت شد':'✅ Saved');
 }
 
-function cancelScan(){document.getElementById('confirmBox').style.display='none';document.getElementById('aiBox').style.display='none';document.getElementById('prevImg').style.display='none';document.getElementById('prevImg').src='';document.getElementById('fileInput').value='';cfType=null;setCfCur('CAD');document.getElementById('cfBtnInc').className='type-btn';document.getElementById('cfBtnExp').className='type-btn';}
+function cancelScan(){document.getElementById('confirmBox').style.display='none';document.getElementById('aiBox').style.display='none';document.getElementById('prevImg').style.display='none';document.getElementById('prevImg').src='';document.getElementById('fileInput').value='';setCfCur('CAD');document.getElementById('scanSection').style.display='none';document.getElementById('step2').style.display='block';}
 
 async function addManual(){
   if(!mType){alert(lang==='fa'?'درآمد یا هزینه؟':'Income or expense?');return;}
@@ -604,7 +715,7 @@ async function addManual(){
   document.getElementById('mAmount').value='';document.getElementById('mDesc').value='';
   if(document.getElementById('mParty'))document.getElementById('mParty').value='';
   if(document.getElementById('mInvNum'))document.getElementById('mInvNum').value='';
-  mType=null;document.getElementById('mBtnInc').className='type-btn';document.getElementById('mBtnExp').className='type-btn';
+  backToStep1();
   alert(lang==='fa'?'✅ ثبت شد':'✅ Saved');
 }
 
