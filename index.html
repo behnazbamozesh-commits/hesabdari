@@ -672,7 +672,7 @@ async function onFile(e){
     document.getElementById('aiStatus').textContent=lang==='fa'?'AI داره فاکتور رو می‌خونه...':'Reading receipt...';
     document.getElementById('confirmBox').style.display='none';
     try{
-      const res=await fetch('https://delicate-fire-f495.behnazbamozesh.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:500,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mime,data:b64}},{type:'text',text:'Receipt image. Reply ONLY with raw JSON, no markdown, no extra text: {"amount":number,"currency":"CAD_or_IRR","desc":"short English description","date":"YYYY-MM-DD or null","party":"store name or null"}. If CAD/USD use CAD. If Toman/Rial use IRR. If rial divide by 10 for toman.'}]}]})});
+      const res=await fetch('https://delicate-fire-f495.behnazbamozesh.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:500,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mime,data:b64}},{type:'text',text:'Receipt image. Reply ONLY with raw JSON, no markdown, no extra text: {"amount":number,"currency":"CAD_or_IRR","desc":"short English description","date":"YYYY-MM-DD or null","party":"store name or null"}. If CAD/USD use CAD. If Toman/Rial use IRR. If rial divide by 10 for toman.'}]}]})});
       const d=await res.json();
       console.log('Worker response:', JSON.stringify(d));
       const txt=d.content?d.content.map(b=>b.text||'').join(''):'';
