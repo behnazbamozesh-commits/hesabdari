@@ -545,6 +545,7 @@ sb.auth.onAuthStateChange(async(event,session)=>{
 // CLOUD
 function setSyncStatus(s){
   const el=document.getElementById('syncStatus');
+  if(!el) return;
   if(s==='ok'){el.className='sync-status sync-ok';el.textContent=lang==='fa'?'✅ ذخیره در cloud':'✅ Saved';}
   if(s==='ing'){el.className='sync-status sync-ing';el.textContent=lang==='fa'?'⏳ در حال ذخیره...':'⏳ Saving...';}
   if(s==='err'){el.className='sync-status sync-err';el.textContent=lang==='fa'?'❌ خطا در ذخیره':'❌ Error';}
