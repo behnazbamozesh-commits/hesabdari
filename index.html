@@ -623,7 +623,8 @@ function setCfType(t){cfType=t;document.getElementById('cfBtnInc').className='ty
 
 function selectType(t){
   cfType=t;mType=t;
-  setCfType(t);
+  document.getElementById('cfBtnInc').className='type-btn'+(t==='income'?' sel-income':'');
+  document.getElementById('cfBtnExp').className='type-btn'+(t==='expense'?' sel-expense':'');
   document.getElementById('step1').style.display='none';
   document.getElementById('step2').style.display='block';
   const label=document.getElementById('selectedTypeLabel');
@@ -693,7 +694,7 @@ async function onFile(e){
 }
 
 async function confirmTx(){
-  if(!cfType){alert(lang==='fa'?'درآمد یا هزینه؟':'Income or expense?');return;}
+  if(!cfType){cfType='expense';} // default to expense if not set
   const amt=parseFloat(document.getElementById('cfAmount').value);
   if(!amt||isNaN(amt)){alert(lang==='fa'?'مبلغ وارد کن':'Enter amount');return;}
   const dateVal=document.getElementById('cfDate').value||today();
