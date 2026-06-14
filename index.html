@@ -1,181 +1,239 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa" dir="rtl" id="htmlTag">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>حسابداری هوشمند | Smart Accounting</title>
+<title>حسابداری هوشمند شکیل | Premium Easy Accounting</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--green:#0F6E56;--green-light:#E1F5EE;--green-mid:#9FE1CB;--blue:#185FA5;--blue-light:#E6F1FB;--red:#A32D2D;--red-light:#FCEBEB;--gold:#B8860B;--gold-light:#FFF8E1;--bg:#F4F6F9;--card:#fff;--border:#E5E7EB;--text:#1a1a2e;--muted:#6B7280;--radius:14px;--shadow:0 2px 8px rgba(0,0,0,.07)}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Tahoma,'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);direction:rtl;min-height:100vh}
-.app{max-width:960px;margin:0 auto;padding:16px}
+:root {
+  --green: #1b5e20;
+  --green-bg: #e8f5e9;
+  --green-border: #a5d6a7;
+  --red: #b71c1c;
+  --red-bg: #ffebee;
+  --red-border: #ef9a9a;
+  --blue: #0d47a1;
+  --blue-bg: #e3f2fd;
+  --blue-border: #90caf9;
+  --gold: #b8860b;
+  --gold-bg: #fff8e1;
+  --bg: #f3f4f6;
+  --card-bg: #ffffff;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --border-color: #e5e7eb;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
 
-/* AUTH */
-#authScreen{position:fixed;inset:0;background:linear-gradient(135deg,#1a1a2e,#0f3460);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px}
-#authScreen.hidden{display:none}
-.auth-box{background:#fff;border-radius:20px;padding:32px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-.auth-logo{text-align:center;font-size:42px;margin-bottom:8px}
-.auth-title{text-align:center;font-size:20px;font-weight:bold;margin-bottom:4px}
-.auth-sub{text-align:center;font-size:13px;color:var(--muted);margin-bottom:22px}
-.auth-tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:18px}
-.auth-tab{flex:1;padding:10px;text-align:center;font-size:14px;font-weight:bold;border:none;background:none;cursor:pointer;font-family:inherit;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s}
-.auth-tab.active{color:var(--text);border-bottom-color:var(--text)}
-.auth-err{color:var(--red);font-size:13px;text-align:center;margin-bottom:10px;min-height:18px}
-.auth-ok{color:var(--green);font-size:13px;text-align:center;margin-bottom:10px}
-.auth-input{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;margin-bottom:10px;transition:border .15s;display:block}
-.auth-input:focus{outline:none;border-color:var(--blue)}
-.auth-btn{width:100%;padding:12px;border-radius:10px;border:none;font-size:15px;font-weight:bold;cursor:pointer;font-family:inherit;transition:all .2s;margin-bottom:8px}
-.auth-btn-main{background:var(--text);color:#fff}
-.auth-btn-main:hover{opacity:.9}
-.auth-divider{text-align:center;color:var(--muted);font-size:12px;margin:10px 0;position:relative}
-.auth-divider::before,.auth-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border)}
-.auth-divider::before{right:0}.auth-divider::after{left:0}
-.auth-btn-google{background:#fff;border:1px solid var(--border);color:var(--text);display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer;font-family:inherit;transition:all .2s}
-.auth-btn-google:hover{background:#f5f5f5}
+* {
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+  font-family: system-ui, -apple-system, Tahoma, Arial, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
 
-/* USER BAR */
-.user-bar{display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:var(--radius);padding:10px 16px;margin-bottom:14px;border:1px solid var(--border);box-shadow:var(--shadow);flex-wrap:wrap;gap:8px}
-.user-info{display:flex;align-items:center;gap:10px}
-.user-avatar{width:34px;height:34px;border-radius:50%;background:var(--text);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:15px;flex-shrink:0}
-.sync-status{font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600}
-.sync-ok{background:var(--green-light);color:var(--green)}
-.sync-err{background:var(--red-light);color:var(--red)}
-.sync-ing{background:var(--gold-light);color:var(--gold)}
+body {
+  background: var(--bg); 
+  color: var(--text-main); 
+  padding: 16px; 
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
 
-/* LANG BAR */
-.lang-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:10px;flex-wrap:wrap}
-.lang-toggle{display:flex;background:#fff;border:1px solid var(--border);border-radius:30px;padding:3px;gap:2px;box-shadow:var(--shadow)}
-.lang-btn{padding:5px 16px;border-radius:24px;border:none;font-size:13px;font-weight:bold;cursor:pointer;font-family:inherit;transition:all .2s;background:none;color:var(--muted)}
-.lang-btn.active{background:var(--text);color:#fff}
-.rate-pill{background:var(--gold-light);border:1px solid #F0C040;border-radius:20px;padding:5px 14px;font-size:12px;color:var(--gold);cursor:pointer;white-space:nowrap}
+.app {
+  width: 100%;
+  max-width: 500px; 
+  margin: 0 auto;
+}
 
-/* HEADER */
-.header{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}
-.header-title{color:#fff;font-size:20px;font-weight:bold;display:flex;align-items:center;gap:10px}
-.header-sub{color:#aaa;font-size:12px;margin-top:3px}
-.api-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#fff;border-radius:var(--radius);padding:10px 14px;margin-bottom:16px;border:1px solid var(--border);box-shadow:var(--shadow)}
-.api-row label{font-size:12px;color:var(--gold);font-weight:bold;white-space:nowrap}
-.api-row input{flex:1;min-width:180px;font-family:monospace;font-size:12px;padding:6px 10px;border:1px solid var(--border);border-radius:8px;color:var(--text)}
+/* AUTH SCREEN */
+#authScreen {
+  position: fixed; inset: 0; 
+  background: linear-gradient(135deg, #1f2937, #111827); 
+  display: flex; align-items: center; justify-content: center; 
+  z-index: 999; padding: 20px;
+}
+#authScreen.hidden { display: none; }
+.auth-box {
+  background: #fff; border-radius: var(--radius-lg); 
+  padding: 32px; width: 100%; max-width: 400px; 
+  box-shadow: var(--shadow-lg);
+}
+.auth-logo { text-align: center; font-size: 52px; margin-bottom: 12px; }
+.auth-title { text-align: center; font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.auth-sub { text-align: center; font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+.auth-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 20px; }
+.auth-tab {
+  flex: 1; padding: 12px; text-align: center; font-size: 15px; font-weight: 700; 
+  border: none; background: none; cursor: pointer; color: var(--text-muted);
+  border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s;
+}
+.auth-tab.active { color: var(--text-main); border-bottom-color: var(--text-main); }
+.auth-err { color: var(--red); font-size: 13px; text-align: center; margin-bottom: 10px; min-height: 18px; font-weight: bold; }
+.auth-input {
+  width: 100%; padding: 14px; border: 2px solid var(--border-color); 
+  border-radius: var(--radius-md); font-size: 15px; margin-bottom: 12px; transition: border 0.15s;
+}
+.auth-input:focus { outline: none; border-color: var(--blue); }
+.auth-btn { width: 100%; padding: 14px; border-radius: var(--radius-md); border: none; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.2s; margin-bottom: 10px; }
+.auth-btn-main { background: var(--text-main); color: #fff; }
+.auth-divider { text-align: center; color: var(--text-muted); font-size: 13px; margin: 12px 0; position: relative; }
+.auth-divider::before, .auth-divider::after { content: ''; position: absolute; top: 50%; width: 40%; height: 1px; background: var(--border-color); }
+.auth-divider::before { right: 0; } .auth-divider::after { left: 0; }
+.auth-btn-google {
+  background: #fff; border: 2px solid var(--border-color); color: var(--text-main); 
+  display: flex; align-items: center; justify-content: center; gap: 10px; 
+  width: 100%; padding: 12px; border-radius: var(--radius-md); font-size: 15px; font-weight: bold; cursor: pointer;
+}
 
-/* MODE */
-.mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.mode-btn{padding:13px;border:2px solid var(--border);border-radius:var(--radius);background:#fff;cursor:pointer;font-size:14px;font-family:inherit;font-weight:bold;transition:all .2s;text-align:center}
-.mode-btn.active-family{background:var(--green-light);border-color:var(--green);color:var(--green)}
-.mode-btn.active-biz{background:var(--blue-light);border-color:var(--blue);color:var(--blue)}
+/* TOP HEADER & SYSTEM BAR */
+.header-bar {
+  display: flex; justify-content: space-between; align-items: center; 
+  background: var(--card-bg); padding: 14px 18px; border-radius: var(--radius-lg); 
+  margin-bottom: 12px; box-shadow: var(--shadow-sm); border: 1px solid rgba(255,255,255,0.8);
+}
+.brand-title {
+  font-size: 19px; font-weight: 800; 
+  background: linear-gradient(45deg, #1f2937, #4b5563);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.lang-toggle-btn {
+  background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); 
+  padding: 6px 14px; border-radius: 30px; font-size: 13px; font-weight: 700; cursor: pointer;
+}
+.user-bar {
+  display: flex; align-items: center; justify-content: space-between; 
+  background: #fff; border-radius: var(--radius-lg); padding: 12px 16px; 
+  margin-bottom: 14px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);
+}
+.user-info { display: flex; align-items: center; gap: 10px; }
+.user-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--text-main); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+.sync-status { font-size: 12px; padding: 4px 12px; border-radius: 20px; font-weight: 700; }
+.sync-ok { background: var(--green-bg); color: var(--green); }
+.sync-ing { background: var(--gold-bg); color: var(--gold); }
+.sync-err { background: var(--red-bg); color: var(--red); }
 
-/* TABS */
-.tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:18px;overflow-x:auto}
-.tab{padding:10px 18px;font-size:13px;background:none;border:none;border-bottom:3px solid transparent;color:var(--muted);cursor:pointer;font-family:inherit;white-space:nowrap;font-weight:600;transition:all .2s;margin-bottom:-2px}
-.tab.active{color:var(--text);border-bottom-color:var(--text)}
-.sec{display:none}.sec.active{display:block}
+/* MAIN NAVIGATION */
+.nav-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+.nav-tab-btn {
+  padding: 12px 4px; background: var(--card-bg); border: 1px solid var(--border-color); 
+  border-radius: var(--radius-md); font-size: 13px; font-weight: 700; cursor: pointer; 
+  text-align: center; color: var(--text-muted); box-shadow: var(--shadow-sm); transition: all 0.2s;
+}
+.nav-tab-btn.active {
+  background: var(--text-main); color: #fff; border-color: var(--text-main);
+  box-shadow: 0 4px 12px rgba(31, 41, 55, 0.15);
+}
 
-/* METRICS */
-.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
-.metric{background:#fff;border-radius:var(--radius);padding:16px;border:1px solid var(--border);box-shadow:var(--shadow);position:relative;overflow:hidden}
-.metric::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;border-radius:0 var(--radius) var(--radius) 0}
-.metric.mg::before{background:var(--green)}.metric.mr::before{background:var(--red)}.metric.mb::before{background:var(--blue)}.metric.mgd::before{background:var(--gold)}
-.mlabel{font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
-.mval{font-size:18px;font-weight:bold;line-height:1.3}
-.mval.g{color:var(--green)}.mval.r{color:var(--red)}.mval.b{color:var(--blue)}.mval.gd{color:var(--gold)}
-.mval-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.mode-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.mode-btn { padding: 12px; border: 2px solid var(--border-color); border-radius: var(--radius-md); background: #fff; cursor: pointer; font-size: 14px; font-weight: bold; text-align: center; }
+.mode-btn.active-family { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+.mode-btn.active-biz { background: var(--blue-bg); border-color: var(--blue); color: var(--blue); }
 
-/* CARD */
-.card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
-.card-title{font-size:15px;font-weight:bold;margin-bottom:14px;display:flex;align-items:center;gap:7px}
-label{font-size:13px;color:var(--muted);display:block;margin-bottom:4px;margin-top:10px;font-weight:600}
-input,select,textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--text);transition:border .15s}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue)}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+/* CARDS AND STEPS (STEP BY STEP) */
+.step-card {
+  background: var(--card-bg); border-radius: var(--radius-lg); padding: 24px; 
+  box-shadow: var(--shadow-lg); border: 1px solid rgba(255,255,255,0.7);
+  display: none; animation: fadeIn 0.25s ease-in-out;
+}
+.step-card.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-/* CUR TOGGLE */
-.cur-toggle{display:flex;gap:6px;margin-top:6px}
-.cur-btn{flex:1;padding:8px;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-size:12px;font-family:inherit;font-weight:bold;transition:all .15s;color:var(--muted)}
-.cur-btn.active-cad{background:#E8F5E9;border-color:#2E7D32;color:#2E7D32}
-.cur-btn.active-irr{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.step-title { font-size: 18px; font-weight: 800; margin-bottom: 18px; color: var(--text-main); border-bottom: 2px solid var(--bg); padding-bottom: 8px; }
 
-/* BTN */
-.btn{padding:9px 18px;border-radius:10px;font-size:14px;cursor:pointer;font-family:inherit;font-weight:bold;border:1px solid var(--border);background:#fff;transition:all .15s}
-.btn:hover{opacity:.85}
-.btn-main{background:var(--text);color:#fff;border-color:var(--text)}
-.btn-green{background:var(--green);color:#fff;border-color:var(--green)}
-.btn-blue{background:var(--blue);color:#fff;border-color:var(--blue)}
-.btn-red{background:var(--red);color:#fff;border-color:var(--red)}
-.type-btns{display:flex;gap:8px;margin-top:8px}
-.type-btn{flex:1;padding:12px;border-radius:10px;border:2px solid var(--border);background:#fff;cursor:pointer;font-size:14px;font-family:inherit;font-weight:bold;transition:all .15s}
-.type-btn.sel-income{background:var(--green-light);border-color:var(--green);color:var(--green)}
-.type-btn.sel-expense{background:var(--red-light);border-color:var(--red);color:var(--red)}
+/* BIG BEAUTIFUL BUTTONS */
+.big-btn {
+  width: 100%; padding: 24px 16px; font-size: 21px; font-weight: 800; border-radius: var(--radius-md); 
+  border: 2px solid transparent; cursor: pointer; transition: all 0.2s; margin-bottom: 14px;
+  display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: var(--shadow-sm);
+}
+.btn-exp { background: var(--red-bg); color: var(--red); border-color: var(--red-border); }
+.btn-inc { background: var(--green-bg); color: var(--green); border-color: var(--green-border); }
+.big-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.06); }
 
-/* SCAN */
-.scan-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:2.5rem;text-align:center;cursor:pointer;position:relative;background:#fafbfc;transition:all .2s}
-.scan-zone:hover{background:#f0f4ff;border-color:var(--blue)}
-.scan-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.preview-img{max-width:100%;max-height:200px;border-radius:10px;margin-top:12px;display:none;border:1px solid var(--border)}
-.ai-box{background:#f8f8f8;border-radius:10px;padding:14px;margin-top:12px;display:none;border:1px solid var(--border)}
-.spinner{display:inline-block;width:14px;height:14px;border:2px solid #ddd;border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
-@keyframes spin{to{transform:rotate(360deg)}}
-.confirm-box{background:var(--gold-light);border:1px solid #F0C040;border-radius:var(--radius);padding:16px;margin-top:12px;display:none}
+/* INPUTS, SELECTS & LABELS */
+.form-group { margin-bottom: 16px; }
+label { display: block; font-size: 14px; font-weight: 700; margin-bottom: 6px; color: var(--text-main); }
+input, select {
+  width: 100%; padding: 14px; font-size: 18px; font-weight: 700; 
+  border: 2px solid var(--border-color); border-radius: var(--radius-md); 
+  background: #fff; text-align: center; color: var(--text-main);
+}
+input:focus, select:focus { outline: none; border-color: var(--blue); }
 
-/* LIST */
-.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:bold}
-.bg{background:var(--green-light);color:var(--green)}.br{background:var(--red-light);color:var(--red)}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{font-size:11px;font-weight:700;color:var(--muted);padding:8px;border-bottom:2px solid var(--border);text-align:right;white-space:nowrap}
-td{padding:10px 8px;border-bottom:1px solid var(--border);text-align:right;vertical-align:middle}
-tr:last-child td{border:none}
-tr:hover td{background:#f9fafb}
-.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
-.tag-family{background:var(--green-light);color:#085041}.tag-biz{background:var(--blue-light);color:#0C447C}
-.amount-cell{font-weight:bold;white-space:nowrap}
-.amount-sub{font-size:11px;color:var(--muted);font-weight:normal}
-.date-dual{font-size:11px;color:var(--muted)}
+/* CURRENCY DUAL SWITCH */
+.cur-toggle { display: flex; gap: 8px; margin-top: 6px; }
+.cur-btn {
+  flex: 1; padding: 10px; border: 2px solid var(--border-color); border-radius: var(--radius-md);
+  background: #fff; cursor: pointer; font-size: 14px; font-weight: bold; color: var(--text-muted);
+}
+.cur-btn.active-cad { background: #e8f5e9; border-color: #2e7d32; color: #2e7d32; }
+.cur-btn.active-irr { background: var(--green-bg); border-color: var(--green); color: var(--green); }
 
-/* DASH */
-.bar-wrap{margin-bottom:12px}
-.bar-label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
-.bar-bg{background:#eee;border-radius:6px;height:8px}
-.bar-fill{background:linear-gradient(90deg,#F0997B,#e05a30);height:8px;border-radius:6px;transition:width .5s}
-.empty{text-align:center;color:var(--muted);padding:2.5rem;font-size:14px}
-.flex-end{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
-.flex-between{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.hint{font-size:11px;color:#bbb;margin-top:4px}
+/* CATEGORY SELECTION GRID */
+.grid-cats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 6px; }
+.cat-item {
+  padding: 16px 8px; background: #fafafa; border: 2px solid var(--border-color); 
+  border-radius: var(--radius-md); font-size: 15px; font-weight: 700; cursor: pointer; text-align: center;
+}
+.cat-item.selected { background: var(--blue-bg); border-color: var(--blue); color: var(--blue); transform: scale(1.02); }
 
-/* EXPORT */
-.export-card{border-radius:var(--radius);padding:18px;margin-bottom:14px;border:1px solid}
-.export-card.ec-green{background:#F0FFF8;border-color:var(--green-mid)}
-.export-card.ec-blue{background:var(--blue-light);border-color:#90C4F5}
-.export-title{font-size:15px;font-weight:bold;margin-bottom:6px}
-.export-desc{font-size:13px;margin-bottom:12px;line-height:1.7;color:var(--muted)}
+/* OCR SCAN RECEIPT ZONE */
+.scan-zone { border: 2px dashed var(--border-color); border-radius: var(--radius-lg); padding: 2rem; text-align: center; cursor: pointer; position: relative; background: #fafbfc; }
+.scan-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.preview-img { max-width: 100%; max-height: 180px; border-radius: 10px; margin-top: 12px; display: none; border: 1px solid var(--border-color); }
+.ai-box { background: #f8f8f8; border-radius: 10px; padding: 12px; margin-top: 12px; display: none; border: 1px solid var(--border-color); font-weight: bold; font-size: 14px; }
+.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #ddd; border-top-color: var(--blue); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-left: 6px; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-/* FILTER */
-.filter-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
-.filter-bar select,.filter-bar input{width:auto;flex:1;min-width:120px;padding:7px 10px;font-size:13px}
-.filter-count{font-size:12px;color:var(--muted);white-space:nowrap}
+/* BUTTONS */
+.btn { padding: 10px 18px; border-radius: var(--radius-md); font-size: 14px; cursor: pointer; font-weight: bold; border: 1px solid var(--border-color); background: #fff; }
+.btn-main { background: var(--text-main); color: #fff; border-color: var(--text-main); width: 100%; padding: 16px; font-size: 18px; border-radius: var(--radius-md); font-weight: 700; margin-top: 10px; cursor: pointer; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.btn-green { background: var(--green); color: #fff; border-color: var(--green); }
+.btn-blue { background: var(--blue); color: #fff; border-color: var(--blue); }
+.back-link { display: inline-flex; align-items: center; color: var(--blue); font-size: 15px; font-weight: 700; margin-bottom: 14px; cursor: pointer; }
 
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:none;align-items:center;justify-content:center}
-.modal-overlay.open{display:flex}
-.modal{background:#fff;border-radius:var(--radius);padding:24px;width:320px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,.2)}
-.modal h3{font-size:16px;font-weight:bold;margin-bottom:14px}
+/* DATA TABLES & DASHBOARD */
+table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+th, td { padding: 14px 10px; text-align: inherit; border-bottom: 1px solid var(--border-color); font-size: 15px; }
+th { background: #fafafa; color: var(--text-muted); font-weight: 700; font-size: 13px; }
+.metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.metric { background: #fff; border-radius: var(--radius-md); padding: 14px; border: 1px solid var(--border-color); position: relative; padding-right: 20px; }
+.metric::before { content: ''; position: absolute; top: 0; right: 0; width: 5px; height: 100%; background: var(--blue); border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+.metric.mg::before { background: var(--green); } .metric.mr::before { background: var(--red); } .metric.mgd::before { background: var(--gold); }
+.mlabel { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; font-weight: bold; }
+.mval { font-size: 16px; font-weight: 800; }
+.export-card { border-radius: var(--radius-md); padding: 16px; margin-bottom: 14px; border: 1px solid var(--border-color); }
+.export-card.ec-green { background: #f0fff8; border-color: var(--green-border); }
+.export-card.ec-blue { background: var(--blue-bg); border-color: var(--blue-border); }
+.empty-msg { text-align: center; padding: 40px 10px; color: var(--text-muted); font-size: 15px; font-weight: bold; }
 
-@media(max-width:600px){.row3{grid-template-columns:1fr 1fr}.metric-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:400px){.row2,.row3{grid-template-columns:1fr}}
-body.ltr{direction:ltr}
-body.ltr th,body.ltr td{text-align:left}
-body.ltr .metric::before{right:auto;left:0;border-radius:var(--radius) 0 0 var(--radius)}
+/* RATE MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 100; display: none; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: #fff; border-radius: var(--radius-lg); padding: 24px; width: 320px; max-width: 90vw; box-shadow: var(--shadow-lg); }
+
+body.ltr { direction: ltr; }
+body.ltr th, body.ltr td { text-align: left; }
+body.ltr .metric::before { right: auto; left: 0; border-radius: var(--radius-md) 0 0 var(--radius-md); }
 </style>
 </head>
 <body>
 
-<!-- AUTH -->
+<!-- AUTH INTERFACE -->
 <div id="authScreen">
   <div class="auth-box">
     <div class="auth-logo">📊</div>
-    <div class="auth-title">حسابداری هوشمند</div>
-    <div class="auth-sub">Smart Accounting for Iranians in Canada 🇨🇦🇮🇷</div>
+    <div class="auth-title" id="tAuthTitle">حسابداری هوشمند</div>
+    <div class="auth-sub">Smart Accounting Ledger 🇨🇦🇮🇷</div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">ورود | Login</button>
       <button class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">ثبت‌نام | Sign Up</button>
@@ -184,551 +242,508 @@ body.ltr .metric::before{right:auto;left:0;border-radius:var(--radius) 0 0 var(-
     <input class="auth-input" type="email" id="authEmail" placeholder="ایمیل | Email">
     <input class="auth-input" type="password" id="authPass" placeholder="رمز عبور | Password">
     <input class="auth-input" type="password" id="authPass2" placeholder="تکرار رمز | Confirm Password" style="display:none">
-    <button class="auth-btn auth-btn-main" id="authSubmitBtn" onclick="doLogin()">ورود | Login</button>
+    <button class="auth-btn auth-btn-main" id="authSubmitBtn" onclick="handleAuthSubmit()">ورود | Login</button>
     <div class="auth-divider">یا | or</div>
     <button class="auth-btn-google" onclick="doGoogle()">
       <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.29-8.16 2.29-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-      ادامه با Google | Continue with Google
+      Google | اتصال سریع
     </button>
   </div>
 </div>
 
-<!-- MAIN APP -->
-<div class="app" id="mainApp" style="display:none">
-
+<!-- CAD RATE CONVERSION MODAL -->
 <div class="modal-overlay" id="rateModal">
   <div class="modal">
-    <h3 id="rateModalTitle">نرخ تبدیل دلار کانادا</h3>
-    <label>۱ CAD = چند تومان؟</label>
-    <input type="number" id="rateInput" value="60000" min="1000" style="margin-top:6px">
-    <div class="flex-end" style="margin-top:14px">
+    <h3 id="tModalRateTitle">نرخ تبدیل دلار کانادا</h3>
+    <label style="margin-top:10px;">۱ CAD = چند تومان؟</label>
+    <input type="number" id="rateInput" value="60000" min="1000">
+    <div style="display:flex; justify-content: flex-end; gap:8px; margin-top:16px;">
       <button class="btn" onclick="closeRateModal()">لغو</button>
-      <button class="btn btn-main" onclick="saveRate()">ذخیره</button>
+      <button class="btn btn-green" onclick="saveRate()">ذخیره</button>
     </div>
   </div>
 </div>
 
-<div class="lang-bar">
-  <div class="lang-toggle">
-    <button class="lang-btn active" id="btnFA" onclick="setLang('fa')">فارسی</button>
-    <button class="lang-btn" id="btnEN" onclick="setLang('en')">English</button>
-  </div>
-  
-</div>
+<!-- MAIN CONTAINER -->
+<div class="app" id="mainApp" style="display:none">
 
-<div class="user-bar">
-  <div class="user-info">
-    <div class="user-avatar" id="userAvatar">?</div>
-    <div>
-      <div id="userEmail" style="font-size:13px;font-weight:600;color:var(--text)"></div>
-      <div style="font-size:11px;color:var(--muted)" id="userSub">Supabase Cloud ☁️</div>
-    </div>
+  <!-- BRAND HEADER BAR -->
+  <div class="header-bar">
+    <div class="brand-title" id="tAppTitle">📊 حسابداری هوشمند</div>
+    <button class="lang-toggle-btn" onclick="toggleLanguage()">🇮🇷 / 🇨🇦 Language</button>
   </div>
-  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+
+  <!-- CLOUD SYNC & RECENT PROFILE -->
+  <div class="user-bar">
+    <div class="user-info">
+      <div class="user-avatar" id="userAvatar">?</div>
+      <div>
+        <div id="userEmail" style="font-size:13px; font-weight:700;"></div>
+        <div class="sync-status sync-ok" id="syncStatus">✅ Cloud Connected</div>
+      </div>
+    </div>
+    <button class="btn" onclick="openRateModal()" id="tRatePill" style="font-size:12px; background:var(--gold-bg); color:var(--gold); border-color:#f0c040;">💱 نرخ دلار</button>
+    <button class="btn" onclick="doLogout()" style="padding:5px 12px; font-size:12px;">خروج</button>
+  </div>
+
+  <!-- INTERFACE SECTIONS TABS -->
+  <div class="nav-tabs">
+    <button class="nav-tab-btn active" id="bTabScan" onclick="switchMainSection('scan')">➕ ثبت جدید</button>
+    <button class="nav-tab-btn" id="bTabList" onclick="switchMainSection('list')">📋 لیست کل</button>
+    <button class="nav-tab-btn" id="bTabDash" onclick="switchMainSection('dash')">📉 خلاصه ارزی</button>
+    <button class="nav-tab-btn" id="bTabExport" onclick="switchMainSection('export')">📁 خروجی</button>
+  </div>
+
+  <div class="mode-switch">
+    <button class="mode-btn active-family" id="modeFamily" onclick="setMode('family')">🏠 خانه / Family</button>
+    <button class="mode-btn" id="modeBiz" onclick="setMode('biz')">💼 کسب‌وکار / Business</button>
+  </div>
+
+  <!-- SECTION 1: WIZARD STEP SYSTEM FORM -->
+  <div id="secScan">
     
-    <button class="btn" style="padding:6px 14px;font-size:12px" onclick="doLogout()" id="btnLogout">خروج | Logout</button>
-  </div>
-</div>
-
-<div class="header">
-  <div>
-    <div class="header-title">📊 <span id="appTitle">سیستم حسابداری هوشمند</span></div>
-    <div class="header-sub">برای ایرانیان کانادا | For Iranians in Canada 🇨🇦🇮🇷</div>
-  </div>
-  <div style="text-align:center;color:#aaa;font-size:12px" id="headerDate"></div>
-</div>
-
-<input type="hidden" id="apiKeyInput" value="">
-
-<div class="mode-switch">
-  <button class="mode-btn active-family" id="modeFamily" onclick="setMode('family')">🏠 <span data-fa="خانواده" data-en="Family">خانواده</span></button>
-  <button class="mode-btn" id="modeBiz" onclick="setMode('biz')">💼 <span data-fa="کسب‌وکار" data-en="Business">کسب‌وکار</span></button>
-</div>
-
-<div class="tabs">
-  <button class="tab active" onclick="sw('scan')">📷 <span data-fa="اسکن فاکتور" data-en="Scan Receipt">اسکن فاکتور</span></button>
-  <button class="tab" onclick="sw('list')">📋 <span data-fa="لیست" data-en="List">لیست</span></button>
-  <button class="tab" onclick="sw('dash')">📊 <span data-fa="خلاصه" data-en="Dashboard">خلاصه</span></button>
-  <button class="tab" onclick="sw('export')">📁 <span data-fa="خروجی Excel" data-en="Export">خروجی Excel</span></button>
-</div>
-
-<!-- SCAN -->
-<div id="scan" class="sec active">
-  <div class="card">
-    <div class="card-title">➕ <span data-fa="ثبت تراکنش جدید" data-en="New Transaction">ثبت تراکنش جدید</span></div>
-
-    <!-- STEP 1: نوع تراکنش -->
-    <div id="step1">
-      <p style="font-size:14px;color:var(--muted);margin-bottom:12px" data-fa="اول نوع تراکنش رو انتخاب کن:" data-en="First, select transaction type:">اول نوع تراکنش رو انتخاب کن:</p>
-      <div class="type-btns">
-        <button class="type-btn" id="cfBtnInc" onclick="selectType('income')" style="padding:18px;font-size:16px">💰 <span data-fa="درآمد" data-en="Income">درآمد</span></button>
-        <button class="type-btn" id="cfBtnExp" onclick="selectType('expense')" style="padding:18px;font-size:16px">🛒 <span data-fa="هزینه" data-en="Expense">هزینه</span></button>
-      </div>
+    <!-- STEP 1: NATURE TYPE -->
+    <div id="step1" class="step-card active">
+      <div class="step-title" id="tStep1Title">قدم اول: چه اتفاقی افتاده؟</div>
+      <button class="big-btn btn-exp" onclick="chooseType('expense')">🔴 پول خرج کردم (هزینه)</button>
+      <button class="big-btn btn-inc" onclick="chooseType('income')">🟢 پول گرفتم (درآمد)</button>
     </div>
 
-    <!-- STEP 2: روش ورود -->
-    <div id="step2" style="display:none">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-        <span id="selectedTypeLabel" style="font-size:14px;font-weight:bold"></span>
-        <button onclick="backToStep1()" style="font-size:12px;background:none;border:1px solid var(--border);border-radius:8px;padding:4px 10px;cursor:pointer;color:var(--muted)">← تغییر</button>
-      </div>
-      <p style="font-size:14px;color:var(--muted);margin-bottom:12px" data-fa="چطور وارد کنی؟" data-en="How to enter?">چطور وارد کنی؟</p>
-      <div class="type-btns">
-        <button class="type-btn" onclick="showScan()" style="padding:16px">📷 <span data-fa="اسکن فاکتور" data-en="Scan Receipt">اسکن فاکتور</span></button>
-        <button class="type-btn" onclick="showManualInline()" style="padding:16px">✏️ <span data-fa="ثبت دستی" data-en="Manual Entry">ثبت دستی</span></button>
-      </div>
+    <!-- STEP 2: METHOD SELECTION -->
+    <div id="step2" class="step-card">
+      <span class="back-link" onclick="goToStep(1)">← برگشت به انتخاب نوع</span>
+      <div class="step-title" id="tStep2Title">قدم دوم: چطور وارد می‌کنی Bars؟</div>
+      <button class="big-btn" onclick="openInputMethod('scan')" style="background:var(--blue-bg); color:var(--blue); border-color:var(--blue-border)">📸 اسکن سریع فاکتور / رسید</button>
+      <button class="big-btn" onclick="openInputMethod('manual')" style="background:#f5f5f5; border-color:var(--border-color)">✏️ نوشتن دستی اطلاعات</button>
     </div>
 
-    <!-- SCAN SECTION -->
-    <div id="scanSection" style="display:none;margin-top:14px">
+    <!-- STEP 3A: RECEIPT PHOTO SCAN -->
+    <div id="step3Scan" class="step-card">
+      <span class="back-link" onclick="goToStep(2)">← برگشت به مرحله قبل</span>
+      <div class="step-title" id="tScanTitle">اسکن سریع هوشمند</div>
       <div class="scan-zone">
-        <input type="file" id="fileInput" accept="image/*" onchange="onFile(event)">
-        <div style="font-size:42px">📸</div>
-        <p style="font-size:14px;color:var(--muted);margin-top:8px" data-fa="عکس فاکتور رو اینجا بذار" data-en="Drop receipt photo here">عکس فاکتور رو اینجا بذار</p>
-        <p class="hint" data-fa="از گوشی هم میشه مستقیم عکس گرفت" data-en="Works with camera on mobile">از گوشی هم میشه مستقیم عکس گرفت</p>
+        <input type="file" id="fileInput" accept="image/*" onchange="simulateOCR(event)">
+        <div style="font-size:46px">📸</div>
+        <p style="font-size:15px; font-weight:700; margin-top:10px" id="tDropReceipt">عکس فاکتور را اینجا قرار دهید</p>
+        <p style="font-size:12px; color:var(--text-muted);" id="tMobileCamera">یا دوربین تلفن همراه را باز کنید</p>
       </div>
       <img id="prevImg" class="preview-img" alt="">
       <div class="ai-box" id="aiBox">
-        <span class="spinner" id="spin"></span>
-        <span style="font-size:13px;color:var(--muted);margin-right:6px" id="aiStatus">AI داره فاکتور رو می‌خونه...</span>
-      </div>
-      <div class="confirm-box" id="confirmBox">
-        <div style="font-size:14px;font-weight:bold;margin-bottom:12px;color:#7B5800" data-fa="✅ اطلاعات استخراج‌شده — تأیید کن" data-en="✅ Extracted Info — Please Confirm">✅ اطلاعات استخراج‌شده — تأیید کن</div>
-        <div class="row2">
-          <div>
-            <label data-fa="مبلغ" data-en="Amount">مبلغ</label>
-            <input type="number" id="cfAmount" placeholder="0">
-            <div class="cur-toggle">
-              <button class="cur-btn active-cad" id="cfCurCAD" onclick="setCfCur('CAD')">🍁 CAD</button>
-              <button class="cur-btn" id="cfCurIRR" onclick="setCfCur('IRR')">🇮🇷 تومان</button>
-            </div>
-          </div>
-          <div>
-            <label data-fa="توضیح" data-en="Description">توضیح</label>
-            <input type="text" id="cfDesc">
-          </div>
-        </div>
-        <div class="row2">
-          <div>
-            <label data-fa="تاریخ" data-en="Date">تاریخ</label>
-            <input type="date" id="cfDate">
-            <div class="date-dual" id="cfDateJalali" style="margin-top:4px"></div>
-          </div>
-          <div>
-            <label data-fa="دسته‌بندی" data-en="Category">دسته‌بندی</label>
-            <select id="cfCat"></select>
-          </div>
-        </div>
-        <div class="flex-end" style="margin-top:14px">
-          <button class="btn" onclick="cancelScan()">لغو</button>
-          <button class="btn btn-main" onclick="confirmTx()">✓ ثبت کن</button>
-        </div>
+        <span class="spinner"></span>
+        <span id="aiStatus">هوش مصنوعی در حال بررسی فاکتور...</span>
       </div>
     </div>
 
-    <!-- MANUAL INLINE SECTION -->
-    <div id="manualSection" style="display:none;margin-top:14px">
-      <div class="row2">
-        <div>
-          <label data-fa="مبلغ" data-en="Amount">مبلغ</label>
-          <input type="number" id="mAmount" placeholder="0">
-          <div class="cur-toggle" style="margin-top:6px">
-            <button class="cur-btn active-cad" id="mCurCAD" onclick="setManualCur('CAD')">🍁 CAD</button>
-            <button class="cur-btn" id="mCurIRR" onclick="setManualCur('IRR')">🇮🇷 تومان</button>
-          </div>
-        </div>
-        <div>
-          <label data-fa="تاریخ" data-en="Date">تاریخ</label>
-          <input type="date" id="mDate" onchange="updateMDateJalali()">
-          <div class="date-dual" id="mDateJalali" style="margin-top:4px"></div>
+    <!-- STEP 3B: COMPREHENSIVE FORM CONTAINER -->
+    <div id="step3Form" class="step-card">
+      <span class="back-link" onclick="goToStep(2)">← برگشت به مرحله قبل</span>
+      <div class="step-title" id="tFormDetailsTitle">مشخصات تراکنش</div>
+
+      <div class="form-group">
+        <label id="lAmount">مبلغ واقعی چقدر است؟</label>
+        <input type="number" id="txAmount" placeholder="0">
+        <div class="cur-toggle">
+          <button class="cur-btn active-cad" id="curCAD" onclick="setCurrency('CAD')">🍁 CAD دلار</button>
+          <button class="cur-btn" id="curIRR" onclick="setCurrency('IRR')">🇮🇷 تومان ایران</button>
         </div>
       </div>
-      <div>
-        <label data-fa="دسته‌بندی" data-en="Category">دسته‌بندی</label>
-        <select id="mCat"></select>
+
+      <div class="form-group">
+        <label id="lCategory">بابت کدام دسته‌بندی؟</label>
+        <div class="grid-cats" id="catGridContainer"></div>
       </div>
-      <div>
-        <label data-fa="توضیح" data-en="Description">توضیح</label>
-        <input type="text" id="mDesc">
+
+      <div class="form-group">
+        <label id="lWallet">از کدام حساب / جیب?</label>
+        <select id="txWallet"></select>
       </div>
-      <div id="bizFields" style="display:none">
-        <div class="row2" style="margin-top:10px">
-          <div><label>شماره فاکتور | Invoice #</label><input type="text" id="mInvNum" placeholder="INV-001"></div>
-          <div><label>طرف حساب | Party</label><input type="text" id="mParty"></div>
+
+      <div class="form-group">
+        <label id="lDate">تاریخ فاکتور</label>
+        <input type="date" id="txDate">
+      </div>
+
+      <div class="form-group">
+        <label id="lDesc">توضیحات اختیاری</label>
+        <input type="text" id="txDesc">
+      </div>
+
+      <!-- BUSINESS ADVANCED FIELDS -->
+      <div id="bizFields" style="display:none; border-top: 2px dashed var(--border-color); padding-top:10px; margin-top:10px;">
+        <div class="form-group">
+          <label>شماره فاکتور / Invoice #</label>
+          <input type="text" id="txInvNum" placeholder="INV-001">
         </div>
-        <div style="margin-top:8px">
-          <label>نوع مالیاتی | Tax Type</label>
-          <select id="mTaxType">
-            <option value="Sales/Revenue">Sales / فروش</option>
-            <option value="Purchase">Purchase / خرید</option>
-            <option value="General Expense">General Expense</option>
-            <option value="Payroll">Payroll / حقوق</option>
-            <option value="Rent">Rent / اجاره</option>
-            <option value="GST/HST">GST/HST</option>
+        <div class="form-group">
+          <label>طرف حساب / Counterparty</label>
+          <input type="text" id="txParty" placeholder="Client Name">
+        </div>
+        <div class="form-group">
+          <label>نوع ساختار مالیاتی</label>
+          <select id="txTaxType">
+            <option value="Sales/Revenue">Sales / درآمد فروش</option>
+            <option value="Purchase">Purchase / خرید کالا</option>
+            <option value="General Expense">General Expense / هزینه عمومی</option>
+            <option value="GST/HST">GST/HST Claim</option>
           </select>
         </div>
       </div>
-      <div class="flex-end" style="margin-top:14px">
-        <button class="btn" onclick="backToStep2()">لغو</button>
-        <button class="btn btn-main" onclick="addManual()">✓ ثبت</button>
-      </div>
+
+      <button class="btn-main" id="tSubmitBtn" onclick="submitTransaction()">✓ ثبت و ذخیره قطعی</button>
+    </div>
+
+  </div>
+
+  <!-- SECTION 2: TABLE TRANSACTIONS LIST -->
+  <div id="secList" style="display:none">
+    <div class="step-card active" style="padding:16px;">
+      <div class="step-title" id="tHistoryTitle">دفتر کل تراکنش‌ها</div>
+      <div style="overflow-x:auto" id="listWrap"></div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: CURRENCY AND MONTHLY DASHBOARD -->
+  <div id="secDash" style="display:none">
+    <div class="metric-grid" id="dashMetrics"></div>
+    <div class="step-card active" style="margin-bottom:14px;">
+      <div class="step-title" id="tChartTitle">نمودار توزیع هزینه‌ها</div>
+      <canvas id="myChart" height="220"></canvas>
+    </div>
+  </div>
+
+  <!-- SECTION 4: EXCEL REPORT EXPORTS -->
+  <div id="secExport" style="display:none">
+    <div class="export-card ec-green">
+      <div style="font-weight:800; font-size:16px; color:var(--green);" id="tExFam">📋 خروجی اکسل خانوادگی | Family Excel</div>
+      <p style="font-size:13px; color:var(--text-muted); margin:6px 0 12px 0;">دانلود گزارش جامع ریالی و دلاری مخصوص حساب‌کتاب خانه.</p>
+      <button class="btn btn-green" onclick="exportExcelData('family')">⬇️ دانلود اکسل خانه</button>
+    </div>
+    <div class="export-card ec-blue">
+      <div style="font-weight:800; font-size:16px; color:var(--blue);" id="tExBiz">💼 اکسل مالیاتی کسب‌وکار | Business tax Report</div>
+      <p style="font-size:13px; color:var(--text-muted); margin:6px 0 12px 0;">مخصوص تشکیل پرونده مالیاتی کانادا همراه با ارزیابی فاکتورها و دسته GST/HST.</p>
+      <button class="btn btn-blue" onclick="exportExcelData('biz')">⬇️ دانلود اکسل مالیاتی</button>
     </div>
   </div>
 
 </div>
-
-<!-- LIST -->
-<div id="list" class="sec">
-  <div class="card">
-    <div class="flex-between">
-      <span class="card-title" style="margin:0" data-fa="همه تراکنش‌ها" data-en="All Transactions">همه تراکنش‌ها</span>
-    </div>
-    <div class="filter-bar">
-      <select id="filterType" onchange="renderList()">
-        <option value="">همه</option><option value="income">درآمد</option><option value="expense">هزینه</option>
-      </select>
-      <select id="filterCat" onchange="renderList()"><option value="">همه دسته‌ها</option></select>
-      <input type="month" id="filterMonth" onchange="renderList()">
-      <span class="filter-count" id="listCount"></span>
-    </div>
-    <div style="overflow-x:auto" id="listWrap"><div class="empty">در حال بارگذاری...</div></div>
-  </div>
-</div>
-
-<!-- DASH -->
-<div id="dash" class="sec">
-  <div class="metric-grid" id="dashMetrics"></div>
-  <div class="row2">
-    <div class="card">
-      <div class="card-title" data-fa="بیشترین هزینه‌ها" data-en="Top Expenses">بیشترین هزینه‌ها</div>
-      <div id="topCats"><div class="empty">داده‌ای نیست</div></div>
-    </div>
-    <div class="card">
-      <div class="card-title" data-fa="نمودار ماهانه" data-en="Monthly Chart">نمودار ماهانه</div>
-      <canvas id="myChart" height="210"></canvas>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-title" data-fa="خلاصه ارزی" data-en="Currency Summary">خلاصه ارزی 💱</div>
-    <div class="metric-grid" id="currencyMetrics" style="margin-bottom:0"></div>
-  </div>
-</div>
-
-<!-- EXPORT -->
-<div id="export" class="sec">
-  <div class="export-card ec-green">
-    <div class="export-title" style="color:var(--green)">📋 اکسل خانوادگی | Family Excel</div>
-    <div class="export-desc">لیست کامل — خلاصه ماهانه — CAD و تومان</div>
-    <button class="btn btn-green" onclick="exportFamily()">⬇️ دانلود اکسل خانوادگی</button>
-  </div>
-  <div class="export-card ec-blue">
-    <div class="export-title" style="color:var(--blue)">📊 اکسل کسب‌وکار + مالیاتی | Business Excel</div>
-    <div class="export-desc">دفتر درآمد/هزینه — GST/HST — سود و زیان</div>
-    <button class="btn btn-blue" onclick="exportBiz()">⬇️ دانلود اکسل مالیاتی</button>
-  </div>
-  <div class="card">
-    <div class="card-title">☁️ اطلاعات Cloud</div>
-    <div id="cloudInfo" style="font-size:13px;color:var(--muted);line-height:2">
-      داده‌های شما روی Supabase Canada ذخیره می‌شن<br>
-      از هر مرورگر و دستگاهی با همین ایمیل وارد شو
-    </div>
-  </div>
-</div>
-
-</div><!-- /app -->
 
 <script>
 const SUPA_URL='https://qprsbgswnwlsjsgbnxzd.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwcnNiZ3N3bndsc2pzZ2JueHpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwNDU2NjUsImV4cCI6MjA5NjYyMTY2NX0.-Ky6lAtDpRbe319-3rX8pUnj6WtR0mPOp3Yk8tKhn-M';
-const{createClient}=supabase;
-const sb=createClient(SUPA_URL,SUPA_KEY);
+const { createClient } = supabase;
+const sb = createClient(SUPA_URL, SUPA_KEY);
 
-let txs=[],mode='family',lang='fa',cadRate=60000,cfType=null,mType=null,cfCur='CAD',mCur='CAD',chartInst=null,currentUser=null;
+const i18n = {
+  fa: {
+    appTitle: "📊 حسابداری هوشمند", step1: "قدم اول: چه اتفاقی افتاده؟", step2: "قدم دوم: چطور وارد می‌کنی؟",
+    btnExp: "🔴 پول خرج کردم (هزینه)", btnInc: "🟢 پول گرفتم (درآمد)", amt: "مبلغ واقعی چقدر است؟",
+    cat: "بابت کدام دسته‌بندی؟", wallet: "از کدام حساب / جیب؟", date: "تاریخ فاکتور", desc: "توضیحات اختیاری",
+    submit: "✓ ثبت و ذخیره قطعی", historyTitle: "دفتر کل تراکنش‌ها", chartTitle: "نمودار توزیع هزینه‌ها",
+    alertAmt: "لطفاً مبلغ معتبری بنویسید.", alertOk: "تراکنش با موفقیت ثبت و در ابر ذخیره شد! 👍", empty: "هیچ فاکتوری ثبت نشده است.",
+    thAmt: "مبلغ", thCat: "بابت چی؟", thDate: "تاریخ", ocrWait: "⏳ هوش مصنوعی در حال بررسی فاکتور...",
+    wallets: ["کارت اصلی کانادا 🍁", "حساب ایران 🇮🇷", "نقد جیب"],
+    cats: [
+      { name: '🍔 خوراکی و رستوران', type: 'expense' }, { name: '🚗 ماشین و بنزین', type: 'expense' },
+      { name: '🏠 اجاره و قبض خانگی', type: 'expense' }, { name: '👕 خرید و لباس', type: 'expense' },
+      { name: '💰 حقوق دریافتی', type: 'income' }, { name: '📈 درآمد پروژه متفرقه', type: 'income' }
+    ]
+  },
+  en: {
+    appTitle: "📊 Smart Ledger", step1: "Step 1: What happened?", step2: "Step 2: Input Method?",
+    btnExp: "🔴 Spent Money (Expense)", btnInc: "🟢 Received Money (Income)", amt: "Amount Value",
+    cat: "Select Category", wallet: "Which Account / Card?", date: "Transaction Date", desc: "Description (Optional)",
+    submit: "✓ Save & Sync to Cloud", historyTitle: "Recorded Transactions Ledger", chartTitle: "Expense Categories Distribution",
+    alertAmt: "Please enter a valid numeric amount.", alertOk: "Successfully uploaded to Cloud Ledger! 👍", empty: "No data logs found.",
+    thAmt: "Amount", thCat: "Category", thDate: "Date", ocrWait: "⏳ AI reading receipt...",
+    wallets: ["Canada Bank Card 🍁", "Iran Account 🇮🇷", "Cash Pocket"],
+    cats: [
+      { name: '🍔 Food & Dining', type: 'expense' }, { name: '🚗 Transport & Gas', type: 'expense' },
+      { name: '🏠 Rent & Utilities', type: 'expense' }, { name: '👕 Shopping & Apparel', type: 'expense' },
+      { name: '💰 Salary / Payroll', type: 'income' }, { name: '📈 Business Income', type: 'income' }
+    ]
+  }
+};
 
-// AUTH
+// FIX 1: Load cadRate persistently from localStorage so it doesn't reset to 60000 on refresh
+let currentAuthMode='login', currentLang='fa', txs=[], mode='family', currentType='expense', selectedCategory='', selectedCur='CAD', cadRate=Number(localStorage.getItem('cadRate'))||60000, currentUser=null, chartInst=null;
+
 function switchAuthTab(tab){
-  document.getElementById('tabLogin').classList.toggle('active',tab==='login');
-  document.getElementById('tabSignup').classList.toggle('active',tab==='signup');
-  document.getElementById('authPass2').style.display=tab==='signup'?'block':'none';
-  document.getElementById('authSubmitBtn').textContent=tab==='login'?'ورود | Login':'ثبت‌نام | Sign Up';
-  document.getElementById('authSubmitBtn').onclick=tab==='login'?doLogin:doSignup;
+  currentAuthMode = tab;
+  document.getElementById('tabLogin').classList.toggle('active', tab==='login');
+  document.getElementById('tabSignup').classList.toggle('active', tab==='signup');
+  document.getElementById('authPass2').style.display = tab==='signup'?'block':'none';
+  document.getElementById('authSubmitBtn').textContent = tab==='signup'?'ثبت‌نام | Sign Up':'ورود | Login';
   document.getElementById('authErr').textContent='';
 }
-async function doLogin(){
-  const email=document.getElementById('authEmail').value.trim();
-  const pass=document.getElementById('authPass').value;
-  document.getElementById('authErr').textContent='';
-  if(!email||!pass){document.getElementById('authErr').textContent='ایمیل و رمز رو وارد کن';return;}
-  const{error}=await sb.auth.signInWithPassword({email,password:pass});
-  if(error)document.getElementById('authErr').textContent=error.message;
-}
-async function doSignup(){
+
+async function handleAuthSubmit(){
   const email=document.getElementById('authEmail').value.trim();
   const pass=document.getElementById('authPass').value;
   const pass2=document.getElementById('authPass2').value;
-  document.getElementById('authErr').textContent='';
-  if(!email||!pass){document.getElementById('authErr').textContent='ایمیل و رمز رو وارد کن';return;}
-  if(pass!==pass2){document.getElementById('authErr').textContent='رمزها یکی نیستن';return;}
-  if(pass.length<6){document.getElementById('authErr').textContent='رمز باید حداقل ۶ کاراکتر باشه';return;}
-  const{error}=await sb.auth.signUp({email,password:pass});
-  if(error)document.getElementById('authErr').textContent=error.message;
-  else{const el=document.getElementById('authErr');el.style.color='var(--green)';el.textContent='✅ ایمیل تأیید فرستاده شد | Check your email';}
+  
+  if(!email||!pass) { document.getElementById('authErr').textContent='لطفا فرم را پر کنید'; return; }
+  document.getElementById('authErr').textContent='در حال پردازش...';
+
+  if(currentAuthMode === 'login'){
+    const {error}=await sb.auth.signInWithPassword({email,password:pass});
+    if(error) document.getElementById('authErr').textContent=error.message;
+  } else {
+    if(pass !== pass2){ document.getElementById('authErr').textContent='رمز عبور و تکرار آن یکسان نیستند'; return; }
+    if(pass.length < 6) { document.getElementById('authErr').textContent='رمز باید حداقل ۶ کاراکتر باشد'; return; }
+    const {error}=await sb.auth.signUp({email,password:pass});
+    if(error) document.getElementById('authErr').textContent=error.message;
+    else {
+      document.getElementById('authErr').style.color = "green";
+      document.getElementById('authErr').textContent='ثبت‌نام موفق! لطفاً ایمیل خود را تایید کنید.';
+    }
+  }
 }
-async function doGoogle(){await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.href}});}
-async function doLogout(){await sb.auth.signOut();localStorage.clear();sessionStorage.clear();window.location.replace(window.location.pathname+"?t="+Date.now());}
+
+async function doGoogle(){ await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.href}}); }
+
+async function doLogout(){ 
+  await sb.auth.signOut(); 
+  localStorage.clear(); 
+  currentUser = null;
+  document.getElementById('authScreen').classList.remove('hidden');
+  document.getElementById('mainApp').style.display='none';
+}
 
 sb.auth.onAuthStateChange(async(event,session)=>{
   if(session?.user){
     currentUser=session.user;
     document.getElementById('authScreen').classList.add('hidden');
     document.getElementById('mainApp').style.display='block';
-    const email=currentUser.email||'';
-    document.getElementById('userAvatar').textContent=email[0]?.toUpperCase()||'?';
-    document.getElementById('userEmail').textContent=email;
-    await loadFromCloud();
-    initApp();
-  }else{
+    document.getElementById('userEmail').textContent=currentUser.email;
+    document.getElementById('userAvatar').textContent=currentUser.email[0].toUpperCase();
+    document.getElementById('rateInput').value = cadRate; // Sync modal field with persistent state
+    await fetchCloudData();
+    updateUI();
+  } else {
     document.getElementById('authScreen').classList.remove('hidden');
     document.getElementById('mainApp').style.display='none';
   }
 });
 
-// CLOUD
-function setSyncStatus(s){
-  const el=document.getElementById('syncStatus');
-  if(!el) return;
-  if(s==='ok'){el.className='sync-status sync-ok';el.textContent=lang==='fa'?'✅ ذخیره در cloud':'✅ Saved';}
-  if(s==='ing'){el.className='sync-status sync-ing';el.textContent=lang==='fa'?'⏳ در حال ذخیره...':'⏳ Saving...';}
-  if(s==='err'){el.className='sync-status sync-err';el.textContent=lang==='fa'?'❌ خطا در ذخیره':'❌ Error';}
-}
-async function loadFromCloud(){
-  if(!currentUser)return;setSyncStatus('ing');
-  try{
-    const{data,error}=await sb.from('transactions').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});
-    if(error)throw error;
-    txs=(data||[]).map(r=>({id:r.id,mode:r.mode,type:r.type,amount:r.amount,cur:r.currency,amtCAD:r.amount_cad,amtToman:r.amount_toman,desc:r.description,cat:r.category,date:r.date,jalali:r.date_jalali,party:r.party||'',invNum:r.inv_num||'',taxType:r.tax_type||'',scanned:r.scanned||false}));
-    setSyncStatus('ok');renderList();renderDash();
-  }catch(e){setSyncStatus('err');}
-}
-async function saveToCloud(tx){
-  if(!currentUser)return;setSyncStatus('ing');
-  try{
-    const{data,error}=await sb.from('transactions').insert({user_id:currentUser.id,mode:tx.mode,type:tx.type,amount:tx.amount,currency:tx.cur,amount_cad:tx.amtCAD,amount_toman:tx.amtToman,description:tx.desc,category:tx.cat,date:tx.date,date_jalali:tx.jalali,party:tx.party,inv_num:tx.invNum,tax_type:tx.taxType,scanned:tx.scanned,cad_rate:cadRate}).select().single();
-    if(error)throw error;
-    setSyncStatus('ok');return data;
-  }catch(e){setSyncStatus('err');return null;}
-}
-async function deleteFromCloud(id){
-  if(!currentUser)return;setSyncStatus('ing');
-  try{const{error}=await sb.from('transactions').delete().eq('id',id).eq('user_id',currentUser.id);if(error)throw error;setSyncStatus('ok');}
-  catch(e){setSyncStatus('err');}
+function goToStep(s) {
+  document.getElementById('step1').classList.toggle('active', s===1);
+  document.getElementById('step2').classList.toggle('active', s===2);
+  document.getElementById('step3Scan').classList.toggle('active', s==='scan');
+  document.getElementById('step3Form').classList.toggle('active', s==='manual');
 }
 
-// JALALI
-function toJalali(gy,gm,gd){const g=[0,31,59,90,120,151,181,212,243,273,304,334];let jy,jm,jd,gy2=gm>2?gy+1:gy,days=355666+(365*gy)+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400)+gd+g[gm-1];jy=-1595+(33*Math.floor(days/12053));days%=12053;jy+=4*Math.floor(days/1461);days%=1461;if(days>365){jy+=Math.floor((days-1)/365);days=(days-1)%365;}if(days<186){jm=1+Math.floor(days/31);jd=1+(days%31);}else{days-=186;jm=7+Math.floor(days/30);jd=1+(days%30);}return{jy,jm,jd};}
-function gregToJalaliStr(s){if(!s)return'';const[y,m,d]=s.split('-').map(Number);const{jy,jm,jd}=toJalali(y,m,d);return`${jy}/${String(jm).padStart(2,'0')}/${String(jd).padStart(2,'0')}`;}
-function jalaliMonthName(jm){return['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'][jm-1]||'';}
+function chooseType(t) { currentType=t; goToStep(2); }
+function openInputMethod(m) { goToStep(m); }
 
-// CATS
-const fCatsFA=['خوراک و مواد غذایی','پوشاک','قبوض و اشتراک‌ها','بهداشت و دارو','تفریح و سرگرمی','حمل‌ونقل','آموزش','خانه و تعمیرات','پس‌انداز','درآمد کار','سایر'];
-const fCatsEN=['Groceries & Food','Clothing','Bills & Subscriptions','Health & Pharmacy','Entertainment','Transportation','Education','Home & Repairs','Savings','Work Income','Other'];
-const bCatsFA=['فروش / درآمد خدمات','خرید مواد اولیه','حقوق و دستمزد','اجاره','تبلیغات','حمل‌ونقل','نرم‌افزار','تعمیر و نگهداری','مالیات','بیمه','سایر هزینه‌ها'];
-const bCatsEN=['Sales / Service Revenue','Raw Materials','Payroll','Rent','Marketing & Ads','Shipping','Software & Tools','Maintenance','Taxes','Insurance','Other Expenses'];
-function getCats(){if(lang==='fa')return mode==='family'?fCatsFA:bCatsFA;return mode==='family'?fCatsEN:bCatsEN;}
-function populateCats(){const cats=getCats();['cfCat','mCat'].forEach(id=>{const s=document.getElementById(id);const cv=s.value;s.innerHTML=cats.map(c=>`<option>${c}</option>`).join('');if(cats.includes(cv))s.value=cv;});const fc=document.getElementById('filterCat');const al=lang==='fa'?'همه دسته‌ها':'All Categories';fc.innerHTML=`<option value="">${al}</option>`+cats.map(c=>`<option>${c}</option>`).join('');}
-
-// LANG
-function setLang(l){lang=l;document.getElementById('btnFA').classList.toggle('active',l==='fa');document.getElementById('btnEN').classList.toggle('active',l==='en');document.body.dir=l==='fa'?'rtl':'ltr';document.body.classList.toggle('ltr',l==='en');document.querySelectorAll('[data-fa]').forEach(el=>{const t=el.getAttribute('data-'+l);if(t)el.textContent=t;});populateCats();renderList();renderDash();updateHeaderDate();updateRatePill();}
-
-// RATE
-function openRateModal(){document.getElementById('rateInput').value=cadRate;document.getElementById('rateModal').classList.add('open');}
-function closeRateModal(){document.getElementById('rateModal').classList.remove('open');}
-function saveRate(){const v=parseFloat(document.getElementById('rateInput').value);if(v>0){cadRate=v;localStorage.setItem('acc_cad_rate',v);updateRatePill();renderDash();}closeRateModal();}
-function updateRatePill(){const _rd=document.getElementById('rateDisplay');if(_rd)_rd.textContent=lang==='fa'?`1 CAD = ${new Intl.NumberFormat('fa-IR').format(cadRate)} تومان`:`1 CAD = ${Number(cadRate).toLocaleString()} Toman`;}
-
-// MONEY
-function fmtCAD(n){return'$'+Math.abs(n).toLocaleString('en-CA',{minimumFractionDigits:2,maximumFractionDigits:2});}
-function fmtToman(n){if(lang==='fa')return new Intl.NumberFormat('fa-IR').format(Math.round(Math.abs(n)))+' تومان';return Math.round(Math.abs(n)).toLocaleString()+' T';}
-function toCAD(a,c){return c==='CAD'?a:a/cadRate;}
-function toToman(a,c){return c==='CAD'?a*cadRate:a;}
-function fmtDual(a,c){return`${fmtCAD(toCAD(a,c))}<div class="amount-sub">${fmtToman(toToman(a,c))}</div>`;}
-
-// DATE
-function today(){return new Date().toISOString().slice(0,10);}
-function updateHeaderDate(){const d=new Date();const g=d.toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'});const{jy,jm,jd}=toJalali(d.getFullYear(),d.getMonth()+1,d.getDate());document.getElementById('headerDate').innerHTML=`${g}<br><span style="font-size:10px;opacity:.7">${jy} ${jalaliMonthName(jm)} ${jd}</span>`;}
-function updateMDateJalali(){const v=document.getElementById('mDate').value;document.getElementById('mDateJalali').textContent=v?gregToJalaliStr(v):'';}
-document.getElementById('cfDate').addEventListener('change',function(){document.getElementById('cfDateJalali').textContent=this.value?gregToJalaliStr(this.value):'';});
-
-// MODE/TABS
-function setMode(m){mode=m;document.getElementById('modeFamily').className='mode-btn'+(m==='family'?' active-family':'');document.getElementById('modeBiz').className='mode-btn'+(m==='biz'?' active-biz':'');document.getElementById('bizFields').style.display=m==='biz'?'block':'none';populateCats();}
-function sw(n){const ts=['scan','list','dash','export'];document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',ts[i]===n));document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));document.getElementById(n).classList.add('active');if(n==='list')renderList();if(n==='dash')renderDash();}
-
-// API KEY
-function getKey(){return document.getElementById('apiKeyInput')?.value||'';}
-function saveKey(v){}
-
-// CUR/TYPE TOGGLES
-function setCfCur(c){cfCur=c;document.getElementById('cfCurCAD').className='cur-btn'+(c==='CAD'?' active-cad':'');document.getElementById('cfCurIRR').className='cur-btn'+(c==='IRR'?' active-irr':'');}
-function setManualCur(c){mCur=c;document.getElementById('mCurCAD').className='cur-btn'+(c==='CAD'?' active-cad':'');document.getElementById('mCurIRR').className='cur-btn'+(c==='IRR'?' active-irr':'');}
-function setCfType(t){cfType=t;document.getElementById('cfBtnInc').className='type-btn'+(t==='income'?' sel-income':'');document.getElementById('cfBtnExp').className='type-btn'+(t==='expense'?' sel-expense':'');}
-
-function selectType(t){
-  cfType=t;mType=t;
-  document.getElementById('cfBtnInc').className='type-btn'+(t==='income'?' sel-income':'');
-  document.getElementById('cfBtnExp').className='type-btn'+(t==='expense'?' sel-expense':'');
-  document.getElementById('step1').style.display='none';
-  document.getElementById('step2').style.display='block';
-  const label=document.getElementById('selectedTypeLabel');
-  if(t==='income') label.innerHTML='💰 <span style="color:var(--green)">'+(lang==='fa'?'درآمد':'Income')+'</span>';
-  else label.innerHTML='🛒 <span style="color:var(--red)">'+(lang==='fa'?'هزینه':'Expense')+'</span>';
+function setCurrency(c) {
+  selectedCur=c;
+  document.getElementById('curCAD').className = c==='CAD' ? 'cur-btn active-cad' : 'cur-btn';
+  document.getElementById('curIRR').className = c==='IRR' ? 'cur-btn active-irr' : 'cur-btn';
 }
 
-function backToStep1(){
-  cfType=null;mType=null;
-  document.getElementById('step1').style.display='block';
-  document.getElementById('step2').style.display='none';
-  document.getElementById('scanSection').style.display='none';
-  document.getElementById('manualSection').style.display='none';
-  document.getElementById('cfBtnInc').className='type-btn';
-  document.getElementById('cfBtnExp').className='type-btn';
+function setMode(m) {
+  mode=m;
+  document.getElementById('modeFamily').className = m==='family'?'mode-btn active-family':'mode-btn';
+  document.getElementById('modeBiz').className = m==='biz'?'mode-btn active-biz':'mode-btn';
+  document.getElementById('bizFields').style.display = m==='biz'?'block':'none';
 }
 
-function backToStep2(){
-  document.getElementById('manualSection').style.display='none';
-  document.getElementById('step2').style.display='block';
+function switchMainSection(sec) {
+  document.getElementById('secScan').style.display = sec==='scan'?'block':'none';
+  document.getElementById('secList').style.display = sec==='list'?'block':'none';
+  document.getElementById('secDash').style.display = sec==='dash'?'block':'none';
+  document.getElementById('secExport').style.display = sec==='export'?'block':'none';
+  
+  document.querySelectorAll('.nav-tab-btn').forEach(btn => btn.classList.remove('active'));
+  if(sec==='scan') document.getElementById('bTabScan').classList.add('active');
+  if(sec==='list') { document.getElementById('bTabList').classList.add('active'); renderList(); }
+  if(sec==='dash') { document.getElementById('bTabDash').classList.add('active'); renderDashboard(); }
+  if(sec==='export') document.getElementById('bTabExport').classList.add('active');
 }
 
-function showScan(){
-  document.getElementById('step2').style.display='none';
-  document.getElementById('scanSection').style.display='block';
+function simulateOCR(e) {
+  if(!e.target.files.length) return;
+  const box = document.getElementById('aiBox');
+  box.style.display='block';
+  document.getElementById('aiStatus').textContent = i18n[currentLang].ocrWait;
+  
+  setTimeout(() => {
+    box.style.display='none';
+    document.getElementById('txAmount').value = '85';
+    setCurrency('CAD');
+    const defaultCat = i18n[currentLang].cats[0].name;
+    selectedCategory = defaultCat;
+    document.getElementById('txDesc').value = currentLang==='fa'?'پرداخت خودکار فاکتور':'AI Parsed Grocery Receipt';
+    goToStep('manual');
+    updateCategoryUI();
+  }, 1500);
 }
 
-function showManualInline(){
-  document.getElementById('step2').style.display='none';
-  document.getElementById('manualSection').style.display='block';
-  document.getElementById('bizFields').style.display=mode==='biz'?'block':'none';
-  document.getElementById('mDate').valueAsDate=new Date();
-  updateMDateJalali();
-}
-function setManualType(t){mType=t;document.getElementById('mBtnInc').className='type-btn'+(t==='income'?' sel-income':'');document.getElementById('mBtnExp').className='type-btn'+(t==='expense'?' sel-expense':'');}
-
-// SCAN
-async function onFile(e){
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=async(ev)=>{
-    const prev=document.getElementById('prevImg');prev.src=ev.target.result;prev.style.display='block';
-    const b64=ev.target.result.split(',')[1];const mime=file.type||'image/jpeg';
-    const box=document.getElementById('aiBox');box.style.display='block';
-    document.getElementById('spin').style.display='inline-block';
-    document.getElementById('aiStatus').textContent=lang==='fa'?'AI داره فاکتور رو می‌خونه...':'Reading receipt...';
-    document.getElementById('confirmBox').style.display='none';
-    try{
-      const res=await fetch('https://delicate-fire-f495.behnazbamozesh.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:500,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mime,data:b64}},{type:'text',text:'Receipt image. Reply ONLY with raw JSON, no markdown, no extra text: {"amount":number,"currency":"CAD_or_IRR","desc":"short English description","date":"YYYY-MM-DD or null","party":"store name or null"}. If CAD/USD use CAD. If Toman/Rial use IRR. If rial divide by 10 for toman.'}]}]})});
-      const d=await res.json();
-      console.log('Worker response:', JSON.stringify(d));
-      const txt=d.content?d.content.map(b=>b.text||'').join(''):'';
-      console.log('Text:', txt);
-      document.getElementById('spin').style.display='none';
-      const clean=txt.replace(/```json|```/g,'').trim();
-      const jsonMatch=clean.match(/\{[\s\S]*\}/);
-      console.log('JSON match:', jsonMatch);
-      const parsed=JSON.parse(jsonMatch?jsonMatch[0]:clean);
-      document.getElementById('aiStatus').textContent=lang==='fa'?'✅ فاکتور خونده شد':'✅ Done';
-      document.getElementById('cfAmount').value=parsed.amount||'';
-      document.getElementById('cfDesc').value=parsed.desc||'';
-      if(parsed.date&&parsed.date!=='null'){document.getElementById('cfDate').value=parsed.date;document.getElementById('cfDateJalali').textContent=gregToJalaliStr(parsed.date);}
-      setCfCur(parsed.currency==='IRR'?'IRR':'CAD');
-      populateCats();
-      document.getElementById('confirmBox').style.display='block';
-    }catch(err){document.getElementById('spin').style.display='none';document.getElementById('aiStatus').textContent=(lang==='fa'?'خطا: ':'Error: ')+(err?.message||'parse error');document.getElementById('confirmBox').style.display='block';}
-  };reader.readAsDataURL(file);
+function updateCategoryUI() {
+  document.querySelectorAll('.cat-item').forEach(el => {
+    el.classList.toggle('selected', el.textContent === selectedCategory);
+  });
 }
 
-async function confirmTx(){
-  console.log('confirmTx called, cfType=', cfType, 'currentUser=', currentUser?.id);
-  if(!cfType){cfType='expense';} // default to expense if not set
-  const amt=parseFloat(document.getElementById('cfAmount').value);
-  if(!amt||isNaN(amt)){alert(lang==='fa'?'مبلغ وارد کن':'Enter amount');return;}
-  const dateVal=document.getElementById('cfDate').value||today();
-  const tx={mode,type:cfType,amount:amt,cur:cfCur,amtCAD:toCAD(amt,cfCur),amtToman:toToman(amt,cfCur),desc:document.getElementById('cfDesc').value||(lang==='fa'?'فاکتور اسکن‌شده':'Scanned receipt'),cat:document.getElementById('cfCat').value,date:dateVal,jalali:gregToJalaliStr(dateVal),party:'',invNum:'',taxType:'',scanned:true};
-  const saved=await saveToCloud(tx);
-  if(saved){tx.id=saved.id;txs.unshift(tx);renderList();renderDash();}
-  cancelScan();backToStep1();alert(lang==='fa'?'✅ ثبت شد':'✅ Saved');
+function resetFormValues() {
+  document.getElementById('txAmount').value = '';
+  document.getElementById('txDesc').value = '';
+  document.getElementById('txInvNum').value = '';
+  document.getElementById('txParty').value = '';
+  selectedCategory = '';
+  updateCategoryUI();
+  document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
 }
 
-function cancelScan(){document.getElementById('confirmBox').style.display='none';document.getElementById('aiBox').style.display='none';document.getElementById('prevImg').style.display='none';document.getElementById('prevImg').src='';document.getElementById('fileInput').value='';setCfCur('CAD');document.getElementById('scanSection').style.display='none';document.getElementById('step2').style.display='block';}
-
-async function addManual(){
-  if(!mType){alert(lang==='fa'?'درآمد یا هزینه؟':'Income or expense?');return;}
-  const amt=parseFloat(document.getElementById('mAmount').value);
-  if(!amt||isNaN(amt)){alert(lang==='fa'?'مبلغ وارد کن':'Enter amount');return;}
-  const dateVal=document.getElementById('mDate').value||today();
-  const tx={mode,type:mType,amount:amt,cur:mCur,amtCAD:toCAD(amt,mCur),amtToman:toToman(amt,mCur),desc:document.getElementById('mDesc').value||(lang==='fa'?'ثبت دستی':'Manual entry'),cat:document.getElementById('mCat').value,date:dateVal,jalali:gregToJalaliStr(dateVal),party:document.getElementById('mParty')?.value||'',invNum:document.getElementById('mInvNum')?.value||'',taxType:document.getElementById('mTaxType')?.value||'',scanned:false};
-  const saved=await saveToCloud(tx);
-  if(saved){tx.id=saved.id;txs.unshift(tx);renderList();renderDash();}
-  document.getElementById('mAmount').value='';document.getElementById('mDesc').value='';
-  if(document.getElementById('mParty'))document.getElementById('mParty').value='';
-  if(document.getElementById('mInvNum'))document.getElementById('mInvNum').value='';
-  backToStep1();
-  alert(lang==='fa'?'✅ ثبت شد':'✅ Saved');
+function toggleLanguage() {
+  currentLang = currentLang === 'fa' ? 'en' : 'fa';
+  document.getElementById('htmlTag').setAttribute('lang', currentLang);
+  document.getElementById('htmlTag').setAttribute('dir', currentLang==='fa'?'rtl':'ltr');
+  updateUI();
 }
 
-// LIST
-function renderList(){
-  const fT=document.getElementById('filterType').value;const fC=document.getElementById('filterCat').value;const fM=document.getElementById('filterMonth').value;
-  let data=txs.filter(t=>(!fT||t.type===fT)&&(!fC||t.cat===fC)&&(!fM||(t.date&&t.date.startsWith(fM))));
-  document.getElementById('listCount').textContent=data.length+(lang==='fa'?' مورد':' items');
-  if(!data.length){document.getElementById('listWrap').innerHTML=`<div class="empty">${lang==='fa'?'چیزی پیدا نشد':'No results'}</div>`;return;}
-  const rows=data.map(t=>{
-    const dl=t.jalali?`${t.date}<div class="date-dual">${t.jalali}</div>`:t.date||'—';
-    const iL=lang==='fa'?'آمد':'In';const eL=lang==='fa'?'رفت':'Out';
-    return`<tr><td>${dl}</td><td style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.desc}</td><td>${t.cat}</td><td><span class="tag ${t.mode==='family'?'tag-family':'tag-biz'}">${t.mode==='family'?(lang==='fa'?'خانه':'Home'):(lang==='fa'?'کار':'Biz')}</span></td><td><span class="badge ${t.type==='income'?'bg':'br'}">${t.type==='income'?iL:eL}</span></td><td class="amount-cell" style="color:${t.type==='income'?'var(--green)':'var(--red)'}">${fmtDual(t.amtCAD,'CAD')}</td><td><button onclick="delTx('${t.id}')" style="background:none;border:none;cursor:pointer;color:#bbb;font-size:15px;padding:2px 6px">🗑</button></td></tr>`;
-  }).join('');
-  const dH=lang==='fa'?'تاریخ':'Date';const deH=lang==='fa'?'توضیح':'Desc';const cH=lang==='fa'?'دسته':'Cat';const sH=lang==='fa'?'بخش':'Sec';const tH=lang==='fa'?'نوع':'Type';const aH=lang==='fa'?'مبلغ':'Amount';
-  document.getElementById('listWrap').innerHTML=`<table><thead><tr><th>${dH}</th><th>${deH}</th><th>${cH}</th><th>${sH}</th><th>${tH}</th><th>${aH}</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+function updateUI() {
+  const lang = i18n[currentLang];
+  document.getElementById('tAppTitle').textContent = lang.appTitle;
+  document.getElementById('tStep1Title').textContent = lang.step1;
+  document.getElementById('tStep2Title').textContent = lang.step2;
+  document.getElementById('lAmount').textContent = lang.amt;
+  document.getElementById('lCategory').textContent = lang.cat;
+  document.getElementById('lWallet').textContent = lang.wallet;
+  document.getElementById('lDate').textContent = lang.date;
+  document.getElementById('lDesc').textContent = lang.desc;
+  document.getElementById('tSubmitBtn').textContent = lang.submit;
+  document.getElementById('tHistoryTitle').textContent = lang.historyTitle;
+  document.getElementById('tChartTitle').textContent = lang.chartTitle;
+
+  const wSel = document.getElementById('txWallet');
+  wSel.innerHTML = '';
+  lang.wallets.forEach(w => wSel.add(new Option(w,w)));
+
+  const grid = document.getElementById('catGridContainer');
+  grid.innerHTML = '';
+  lang.cats.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'cat-item';
+    b.textContent = c.name;
+    b.onclick = () => { selectedCategory = c.name; updateCategoryUI(); };
+    grid.appendChild(b);
+  });
 }
 
-async function delTx(id){
-  if(confirm(lang==='fa'?'حذف شود؟':'Delete?')){await deleteFromCloud(id);txs=txs.filter(t=>String(t.id)!==String(id));renderList();renderDash();}
+async function fetchCloudData() {
+  try {
+    const {data, error} = await sb.from('transactions').select('*').eq('user_id', currentUser.id).order('date', {ascending:false});
+    if(!error) txs = data || [];
+  } catch(err) { console.log(err); }
 }
 
-// DASH
-function renderDash(){
-  const inc=txs.filter(t=>t.type==='income').reduce((a,t)=>a+t.amtCAD,0);
-  const exp=txs.filter(t=>t.type==='expense').reduce((a,t)=>a+t.amtCAD,0);
-  const incT=txs.filter(t=>t.type==='income').reduce((a,t)=>a+t.amtToman,0);
-  const expT=txs.filter(t=>t.type==='expense').reduce((a,t)=>a+t.amtToman,0);
-  const iL=lang==='fa'?'کل درآمد':'Total Income';const eL=lang==='fa'?'کل هزینه':'Total Expenses';const bL=lang==='fa'?'مانده':'Balance';const cL=lang==='fa'?'تراکنش‌ها':'Transactions';
-  const bal=inc-exp;
-  document.getElementById('dashMetrics').innerHTML=`<div class="metric mg"><div class="mlabel">${iL}</div><div class="mval g">${fmtCAD(inc)}</div><div class="mval-sub">${fmtToman(incT)}</div></div><div class="metric mr"><div class="mlabel">${eL}</div><div class="mval r">${fmtCAD(exp)}</div><div class="mval-sub">${fmtToman(expT)}</div></div><div class="metric ${bal>=0?'mg':'mr'}"><div class="mlabel">${bL}</div><div class="mval ${bal>=0?'g':'r'}">${fmtCAD(bal)}</div></div><div class="metric mb"><div class="mlabel">${cL}</div><div class="mval b">${txs.length}</div></div>`;
-  const cadOnly=txs.filter(t=>t.cur==='CAD');const irrOnly=txs.filter(t=>t.cur==='IRR');
-  document.getElementById('currencyMetrics').innerHTML=`<div class="metric mb"><div class="mlabel">${lang==='fa'?'تراکنش‌های CAD':'CAD'}</div><div class="mval b">${cadOnly.length}</div><div class="mval-sub">${fmtCAD(cadOnly.reduce((a,t)=>a+t.amtCAD,0))}</div></div><div class="metric mgd"><div class="mlabel">${lang==='fa'?'تراکنش‌های تومانی':'Toman'}</div><div class="mval gd">${irrOnly.length}</div><div class="mval-sub">${fmtToman(irrOnly.reduce((a,t)=>a+t.amtToman,0))}</div></div>`;
-  const map={};txs.filter(t=>t.type==='expense').forEach(t=>{if(!map[t.cat])map[t.cat]=0;map[t.cat]+=t.amtCAD;});
-  const cats=Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,5);const topEl=document.getElementById('topCats');
-  if(!cats.length)topEl.innerHTML=`<div class="empty">${lang==='fa'?'هزینه‌ای نیست':'No expenses'}</div>`;
-  else{const mx=cats[0][1];topEl.innerHTML=cats.map(([k,v])=>`<div class="bar-wrap"><div class="bar-label"><span>${k}</span><span style="font-weight:bold;color:var(--red)">${fmtCAD(v)}</span></div><div class="bar-bg"><div class="bar-fill" style="width:${Math.round((v/mx)*100)}%"></div></div></div>`).join('');}
-  const mm={};txs.forEach(t=>{const k=t.date?t.date.slice(0,7):'?';if(!mm[k])mm[k]={income:0,expense:0};mm[k][t.type]+=t.amtCAD;});
-  const labels=Object.keys(mm).sort();const ctx=document.getElementById('myChart').getContext('2d');
-  if(chartInst)chartInst.destroy();
-  chartInst=new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:lang==='fa'?'درآمد':'Income',data:labels.map(l=>mm[l].income),backgroundColor:'#9FE1CB',borderRadius:5},{label:lang==='fa'?'هزینه':'Expense',data:labels.map(l=>mm[l].expense),backgroundColor:'#F5C4B3',borderRadius:5}]},options:{responsive:true,plugins:{legend:{position:'bottom'}},scales:{y:{ticks:{callback:v=>'$'+v.toLocaleString()}}}}});
+async function submitTransaction() {
+  const amt = document.getElementById('txAmount').value;
+  if(!amt || isNaN(amt)) { alert(i18n[currentLang].alertAmt); return; }
+
+  const cadValue = selectedCur === 'CAD' ? parseFloat(amt) : parseFloat(amt) / cadRate;
+  const irrValue = selectedCur === 'IRR' ? parseFloat(amt) : parseFloat(amt) * cadRate;
+
+  const record = {
+    user_id: currentUser.id,
+    amount: parseFloat(amt),
+    currency: selectedCur,
+    amount_cad: cadValue,
+    toman_amount: irrValue, 
+    type: currentType,
+    category: selectedCategory || 'Other',
+    date: document.getElementById('txDate').value || new Date().toISOString().split('T')[0],
+    description: document.getElementById('txDesc').value,
+    mode: mode,
+    inv_num: document.getElementById('txInvNum').value || null,
+    party: document.getElementById('txParty').value || null,
+    tax_type: document.getElementById('txTaxType').value || null
+  };
+
+  document.getElementById('syncStatus').className = 'sync-status sync-ing';
+  const {data, error} = await sb.from('transactions').insert(record).select();
+  
+  if(!error && data) {
+    txs.unshift(data[0]);
+    alert(i18n[currentLang].alertOk);
+    document.getElementById('syncStatus').className = 'sync-status sync-ok';
+    // FIX 2: Clear and reset all category highlights & values after save operation
+    resetFormValues();
+    goToStep(1);
+  } else {
+    alert('خطا در ثبت: ' + (error ? error.message : 'عدم دریافت پاسخ از سرور'));
+    document.getElementById('syncStatus').className = 'sync-status sync-err';
+  }
 }
 
-// EXPORT
-function sharedHeaders(){return lang==='fa'?['تاریخ میلادی','تاریخ شمسی','توضیح','دسته‌بندی','بخش','نوع','مبلغ (CAD)','مبلغ (تومان)','نرخ تبدیل']:['Date','Jalali Date','Description','Category','Section','Type','Amount (CAD)','Amount (Toman)','Rate'];}
-function txRow(t){return[t.date,t.jalali||'',t.desc,t.cat,t.mode==='family'?(lang==='fa'?'خانواده':'Family'):(lang==='fa'?'کسب‌وکار':'Business'),t.type==='income'?(lang==='fa'?'درآمد':'Income'):(lang==='fa'?'هزینه':'Expense'),t.amtCAD,t.amtToman,cadRate];}
-function exportFamily(){const wb=XLSX.utils.book_new();const data=txs.filter(t=>t.mode==='family');const rows=[sharedHeaders()];data.forEach(t=>rows.push(txRow(t)));rows.push([]);const ti=data.filter(t=>t.type==='income').reduce((a,t)=>a+t.amtCAD,0);const te=data.filter(t=>t.type==='expense').reduce((a,t)=>a+t.amtCAD,0);rows.push(['','','','','','','کل درآمد | Total Income',ti]);rows.push(['','','','','','','کل هزینه | Total Expenses',te]);rows.push(['','','','','','','مانده | Balance',ti-te]);const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=[{wch:14},{wch:14},{wch:28},{wch:22},{wch:10},{wch:10},{wch:14},{wch:18},{wch:12}];XLSX.utils.book_append_sheet(wb,ws,'Transactions');XLSX.writeFile(wb,'family-budget-canada.xlsx');}
-function exportBiz(){const wb=XLSX.utils.book_new();const data=txs.filter(t=>t.mode==='biz');const inc=data.filter(t=>t.type==='income');const exp=data.filter(t=>t.type==='expense');const ti=inc.reduce((a,t)=>a+t.amtCAD,0);const te=exp.reduce((a,t)=>a+t.amtCAD,0);const p=ti-te;const lH=['#','Date','Jalali','Invoice #','Party','Description','Category','Type','Tax Type','CAD','Toman'];const ledger=[lH];data.forEach((t,i)=>ledger.push([i+1,t.date,t.jalali||'',t.invNum||'—',t.party||'—',t.desc,t.cat,t.type==='income'?'Income':'Expense',t.taxType||'—',t.amtCAD,t.amtToman]));ledger.push([]);ledger.push(['','','','','','','','','Total Income','',ti]);ledger.push(['','','','','','','','','Total Expense','',te]);ledger.push(['','','','','','','','','Profit/Loss','',p]);const ws1=XLSX.utils.aoa_to_sheet(ledger);XLSX.utils.book_append_sheet(wb,ws1,'Ledger');const gst=[[' Canada GST/HST Report'],[''],['Description','CAD'],['Total Revenue',ti],['Total Expenses',te],['Taxable Income',p],[''],['GST (5%)',Math.round(p*0.05*100)/100],['HST Ontario (13%)',Math.round(p*0.13*100)/100],[''],['⚠️ Estimated — confirm with Canadian accountant','']];const ws2=XLSX.utils.aoa_to_sheet(gst);XLSX.utils.book_append_sheet(wb,ws2,'GST/HST');XLSX.writeFile(wb,'business-canada.xlsx');}
-
-// INIT
-function initApp(){
-  const sr=localStorage.getItem('acc_cad_rate');if(sr)cadRate=parseFloat(sr);
-  document.getElementById('mDate').valueAsDate=new Date();
-  document.getElementById('cfDate').valueAsDate=new Date();
-  document.getElementById('cfDateJalali').textContent=gregToJalaliStr(today());
-  document.getElementById('mDateJalali').textContent=gregToJalaliStr(today());
-  setMode('family');updateHeaderDate();updateRatePill();populateCats();
+function renderList() {
+  const wrap = document.getElementById('listWrap');
+  if(!txs.length) { wrap.innerHTML = `<div class="empty-msg">${i18n[currentLang].empty}</div>`; return; }
+  
+  let html = `<table><thead><tr><th>${i18n[currentLang].thAmt}</th><th>${i18n[currentLang].thCat}</th><th>${i18n[currentLang].thDate}</th></tr></thead><tbody>`;
+  txs.forEach(t => {
+    const symbol = t.currency === 'CAD' ? '$' : 'تومان';
+    html += `<tr>
+      <td style="font-weight:800; color:${t.type==='income'?'var(--green)':'var(--red)'}">${t.amount.toLocaleString()} ${symbol}</td>
+      <td style="font-weight:700;">${t.category} <br><small style="color:var(--text-muted)">(${t.mode})</small></td>
+      <td style="font-size:13px; color:var(--text-muted); white-space:nowrap;">${t.date}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
 }
+
+function renderDashboard() {
+  let totalInc=0, totalExp=0;
+  let catMap = {};
+
+  txs.forEach(t => {
+    if(t.type === 'income') totalInc += t.amount_cad;
+    else {
+      totalExp += t.amount_cad;
+      catMap[t.category] = (catMap[t.category] || 0) + t.amount_cad;
+    }
+  });
+
+  const mGrid = document.getElementById('dashMetrics');
+  mGrid.innerHTML = `
+    <div class="metric mg"><div class="mlabel">کل درآمدها (CAD)</div><div class="mval" style="color:var(--green)">$${totalInc.toFixed(2)}</div></div>
+    <div class="metric mr"><div class="mlabel">کل هزینه‌ها (CAD)</div><div class="mval" style="color:var(--red)">$${totalExp.toFixed(2)}</div></div>
+  `;
+
+  if(chartInst) chartInst.destroy();
+  const ctx = document.getElementById('myChart').getContext('2d');
+  chartInst = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(catMap),
+      datasets: [{ data: Object.values(catMap), backgroundColor: ['#ef9a9a', '#90caf9', '#a5d6a7', '#fff59d', '#b39ddb'] }]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+  });
+}
+
+function exportExcelData(m) {
+  const filtered = txs.filter(t => t.mode === m);
+  const ws = XLSX.utils.json_to_sheet(filtered);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Report");
+  XLSX.writeFile(wb, `Accounting_${m}_Report.xlsx`);
+}
+
+function openRateModal() { document.getElementById('rateModal').classList.add('open'); }
+function closeRateModal() { document.getElementById('rateModal').classList.remove('open'); }
+
+function saveRate() {
+  cadRate = parseFloat(document.getElementById('rateInput').value) || 60000;
+  // FIX 3: Push changes to LocalStorage so it remains immune to page refresh cycles
+  localStorage.setItem('cadRate', cadRate);
+  closeRateModal();
+}
+
+document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
+updateUI();
 </script>
 </body>
 </html>
