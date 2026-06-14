@@ -639,12 +639,14 @@ async function onFile(e){
       document.getElementById('cfDesc').value=parsed.desc||'';
       if(parsed.date&&parsed.date!=='null'){document.getElementById('cfDate').value=parsed.date;document.getElementById('cfDateJalali').textContent=gregToJalaliStr(parsed.date);}
       setCfCur(parsed.currency==='IRR'?'IRR':'CAD');
+      populateCats();
       document.getElementById('confirmBox').style.display='block';
     }catch(err){document.getElementById('spin').style.display='none';document.getElementById('aiStatus').textContent=(lang==='fa'?'خطا: ':'Error: ')+(err?.message||'parse error');document.getElementById('confirmBox').style.display='block';}
   };reader.readAsDataURL(file);
 }
 
 async function confirmTx(){
+  console.log('confirmTx called, cfType=', cfType, 'currentUser=', currentUser?.id);
   if(!cfType){cfType='expense';} // default to expense if not set
   const amt=parseFloat(document.getElementById('cfAmount').value);
   if(!amt||isNaN(amt)){alert(lang==='fa'?'مبلغ وارد کن':'Enter amount');return;}
