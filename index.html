@@ -374,56 +374,7 @@ body.ltr .metric::before{right:auto;left:0;border-radius:var(--radius) 0 0 var(-
       </div>
     </div>
   </div>
-  <div class="card">
-    <div class="card-title">✏️ <span data-fa="ثبت دستی" data-en="Manual Entry">ثبت دستی</span></div>
-    <div class="row3">
-      <div>
-        <label data-fa="مبلغ" data-en="Amount">مبلغ</label>
-        <input type="number" id="mAmount" placeholder="0">
-        <div class="cur-toggle" style="margin-top:6px">
-          <button class="cur-btn active-cad" id="mCurCAD" onclick="setManualCur('CAD')">🍁 CAD</button>
-          <button class="cur-btn" id="mCurIRR" onclick="setManualCur('IRR')">🇮🇷 تومان</button>
-        </div>
-      </div>
-      <div>
-        <label data-fa="تاریخ" data-en="Date">تاریخ</label>
-        <input type="date" id="mDate" onchange="updateMDateJalali()">
-        <div class="date-dual" id="mDateJalali" style="margin-top:4px"></div>
-      </div>
-      <div>
-        <label data-fa="دسته‌بندی" data-en="Category">دسته‌بندی</label>
-        <select id="mCat"></select>
-      </div>
-    </div>
-    <div>
-      <label data-fa="توضیح" data-en="Description">توضیح</label>
-      <input type="text" id="mDesc">
-    </div>
-    <div id="bizFields" style="display:none">
-      <div class="row3" style="margin-top:10px">
-        <div><label>شماره فاکتور | Invoice #</label><input type="text" id="mInvNum" placeholder="INV-001"></div>
-        <div><label>طرف حساب | Party</label><input type="text" id="mParty"></div>
-        <div>
-          <label>نوع مالیاتی | Tax Type</label>
-          <select id="mTaxType">
-            <option value="Sales/Revenue">Sales / فروش</option>
-            <option value="Purchase">Purchase / خرید</option>
-            <option value="General Expense">General Expense</option>
-            <option value="Payroll">Payroll / حقوق</option>
-            <option value="Rent">Rent / اجاره</option>
-            <option value="GST/HST">GST/HST</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="type-btns" style="margin-top:12px">
-      <button class="type-btn" id="mBtnInc" onclick="setManualType('income')">💰 <span data-fa="درآمد" data-en="Income">درآمد</span></button>
-      <button class="type-btn" id="mBtnExp" onclick="setManualType('expense')">🛒 <span data-fa="هزینه" data-en="Expense">هزینه</span></button>
-    </div>
-    <div class="flex-end" style="margin-top:12px">
-      <button class="btn btn-main" onclick="addManual()">✓ ثبت</button>
-    </div>
-  </div>
+
 </div>
 
 <!-- LIST -->
